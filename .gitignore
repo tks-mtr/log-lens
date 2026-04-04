@@ -1,1 +1,5 @@
 docs/issues/
+docs/local/
+
+# macOS
+.DS_Store
