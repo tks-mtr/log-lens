@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.core.logging import setup_logging
+from app.routers.logs import router as logs_router
 
 setup_logging(settings.log_level)
 logger = logging.getLogger(__name__)
@@ -34,6 +35,9 @@ async def access_log_middleware(request: Request, call_next):
         duration,
     )
     return response
+
+
+app.include_router(logs_router)
 
 
 @app.get("/health")
