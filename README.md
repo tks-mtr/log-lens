@@ -6,6 +6,16 @@ A web application for centralized management, search, and analysis of applicatio
 
 ---
 
+## Viewing Design Documents
+
+Design documents under `docs/system/` use [Mermaid](https://mermaid.js.org/) diagrams (ER diagram, screen flow, sequence diagrams). To preview them locally in VS Code, install the following extension:
+
+- [Markdown Preview Mermaid Support](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)
+
+GitHub renders Mermaid diagrams natively, so no extension is needed when viewing on GitHub.
+
+---
+
 ## Getting Started
 
 ```bash
