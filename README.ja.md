@@ -4,6 +4,16 @@
 
 ---
 
+## 設計ドキュメントの閲覧
+
+`docs/system/` 配下の設計ドキュメント（ER図・画面遷移図・シーケンス図）は [Mermaid](https://mermaid.js.org/) 記法を使用している。VS Code でローカルプレビューするには以下の拡張機能をインストールすること：
+
+- [Markdown Preview Mermaid Support](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)
+
+GitHub 上では Mermaid がネイティブレンダリングされるため、拡張機能は不要。
+
+---
+
 ## 起動方法
 
 ```bash

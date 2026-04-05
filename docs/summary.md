@@ -4,6 +4,28 @@
 
 ---
 
+## 2026-04-05 | feature/system-design PR 準備完了
+
+### システム設計ドキュメント（`docs/system/`）
+
+- `screen_flow.md`: 4画面（ダッシュボード・ログ一覧・ログ詳細・ログ作成）の遷移図を Mermaid `flowchart` で作成
+- `er_diagram.md`: `logs` テーブルの定義・インデックス・CHECK制約・参考DDLを記載。Mermaid `erDiagram` を採用
+- `sequence.md`: UC-01〜07（一覧/詳細/作成/編集/削除/ダッシュボード/CSVエクスポート）を Mermaid `sequenceDiagram` で作成
+
+### 設計上の意思決定
+
+- **api_spec.md を作成しない**: FastAPI が `/docs`（Swagger UI）・`/redoc`（ReDoc）を自動生成するため、手書き仕様書は不要と判断。エンドポイント定義は `requirements_specification.md` を正とし、実装後は Swagger UI が正式仕様となる
+- **Mermaid 記法を採用**: ASCII art は画面・ユースケース増加時に保守困難になるため、全図を Mermaid に統一。GitHub でネイティブレンダリングされ、VS Code では Markdown Preview Mermaid Support 拡張で確認可能
+- **シーケンス図に `alt` / `par` を活用**: 404 分岐（`alt`）・ダッシュボードの並列リクエスト（`par`）を Mermaid の構文で正確に表現
+
+### CLAUDE.md 追記
+
+- 前フェーズの `_plan.md` を読むルールを追加（実装時の引き継ぎ事項確認のため）
+- 現フェーズの作業中に前フェーズの設計修正が必要な場合は修正するルールを追加
+- CLAUDE.md と README の更新は同一コミットにまとめるルールを追加
+
+---
+
 ## 2026-04-05 | feature/requirements-docs PR 準備完了
 
 ### README 更新
