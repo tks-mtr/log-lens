@@ -7,10 +7,10 @@
 ## 作業ステップ
 
 ### Step 1 — プラン作成・コミット [ ]
-- **成果物:** `docs/design/backend_plan.md`（本ファイル）
+- **成果物:** `docs/design/backend_plan.md`
 - **内容:** ブランチ作成後・Step 2 実装前に単独でコミットする
 
-### Step 2 — プロジェクト初期設定 [ ]
+### Step 2 — プロジェクト初期設定 [x]
 - **テスト実行環境:** venv（DB不要）
 - **成果物:**
   - `backend/Dockerfile`
