@@ -193,6 +193,31 @@ class TestUpdateLog:
         assert resp.status_code == 404
         assert resp.json()["detail"] == "Log not found"
 
+    async def test_updated_at_present_and_valid_after_patch(self, client):
+        created = await create_log(client, severity="INFO")
+        resp = await client.patch(
+            f"{BASE}/{created['id']}", json={"severity": "WARNING"}
+        )
+        assert resp.status_code == 200
+        updated = resp.json()
+        # updated_at フィールドが存在し、有効な ISO 8601 日時文字列であること
+        assert updated["updated_at"] is not None
+        # ISO 8601 としてパース可能であること
+        ts = datetime.fromisoformat(updated["updated_at"].replace("Z", "+00:00"))
+        # 合理的な日時範囲内であること（1970年以降、未来すぎない）
+        assert ts > datetime(2020, 1, 1, tzinfo=timezone.utc)
+        assert ts < datetime.now(timezone.utc) + timedelta(minutes=1)
+
+    async def test_empty_body_patch_returns_200_without_changes(self, client):
+        created = await create_log(client, severity="INFO", source="patch-empty-test")
+        resp = await client.patch(f"{BASE}/{created['id']}", json={})
+        assert resp.status_code == 200
+        updated = resp.json()
+        # 空ボディでは何も変更されないこと
+        assert updated["severity"] == created["severity"]
+        assert updated["source"] == created["source"]
+        assert updated["message"] == created["message"]
+
 
 class TestDeleteLog:
     async def test_returns_204_no_content(self, client):
@@ -224,6 +249,31 @@ class TestAnalyticsSummary:
         for key in ("INFO", "WARNING", "ERROR", "CRITICAL"):
             assert key in body["summary"]
 
+    async def test_histogram_entry_has_correct_structure(self, client):
+        src = "hist-struct-test"
+        await create_log(client, severity="ERROR", source=src)
+        await create_log(client, severity="WARNING", source=src)
+        resp = await client.get(f"{BASE}/analytics/summary?source={src}")
+        assert resp.status_code == 200
+        body = resp.json()
+        histogram = body["histogram"]
+        assert len(histogram) >= 1
+        entry = histogram[0]
+        # 各エントリに source と全 severity フィールドが存在すること
+        assert "source" in entry
+        for key in ("INFO", "WARNING", "ERROR", "CRITICAL"):
+            assert key in entry
+        # 値が数値型であること
+        assert isinstance(entry["INFO"], int)
+        assert isinstance(entry["WARNING"], int)
+        assert isinstance(entry["ERROR"], int)
+        assert isinstance(entry["CRITICAL"], int)
+        # source が一致すること
+        assert entry["source"] == src
+        # 投入したデータと集計値が一致すること
+        assert entry["ERROR"] == 1
+        assert entry["WARNING"] == 1
+
     async def test_returns_400_when_start_after_end(self, client):
         resp = await client.get(
             f"{BASE}/analytics/summary"
@@ -240,6 +290,26 @@ class TestAnalyticsTimeseries:
         body = resp.json()
         assert body["interval"] == "day"
         assert "data" in body
+
+    async def test_timeseries_data_entry_has_correct_structure(self, client):
+        src = "ts-struct-test"
+        await create_log(client, severity="ERROR", source=src)
+        await create_log(client, severity="INFO", source=src)
+        resp = await client.get(f"{BASE}/analytics/timeseries?source={src}")
+        assert resp.status_code == 200
+        body = resp.json()
+        data = body["data"]
+        assert len(data) >= 1
+        entry = data[0]
+        # 各エントリに timestamp と全 severity フィールドが存在すること
+        assert "timestamp" in entry
+        for key in ("INFO", "WARNING", "ERROR", "CRITICAL"):
+            assert key in entry
+        # 値が数値型であること
+        assert isinstance(entry["INFO"], int)
+        assert isinstance(entry["WARNING"], int)
+        assert isinstance(entry["ERROR"], int)
+        assert isinstance(entry["CRITICAL"], int)
 
     async def test_interval_param(self, client):
         await create_log(client)
