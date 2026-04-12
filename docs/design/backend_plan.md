@@ -72,7 +72,7 @@
 | 項目 | 内容 |
 |------|------|
 | TDD | テストを先に書き、グリーンになるまで実装を進める |
-| timestamp デフォルト | DB の DEFAULT なし。Service 層で `datetime.now(timezone.utc)` を設定 |
+| timestamp デフォルト | DB の DEFAULT なし。Repository 層（`LogRepository.create`）で `datetime.now(timezone.utc)` を設定 |
 | severity バリデーション | Pydantic `Literal` + DB CHECK 制約の二重バリデーション |
 | 空文字バリデーション | `source` / `message` は空文字不可（Pydantic `min_length=1`） |
 | 日時範囲バリデーション | `start > end` の場合は 400 Bad Request を返す（Service 層で検証） |

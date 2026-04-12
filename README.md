@@ -1,46 +1,106 @@
-# LogLens
-
 > [日本語版はこちら](README.ja.md)
+
+# LogLens
 
 A web application for centralized management, search, and analysis of application logs. LogLens visualizes meaningful metrics from log data to support system health monitoring, early anomaly detection, and informed decision-making.
 
 ---
 
-## Viewing Design Documents
-
-Design documents under `docs/system/` use [Mermaid](https://mermaid.js.org/) diagrams (ER diagram, screen flow, sequence diagrams). To preview them locally in VS Code, install the following extension:
-
-- [Markdown Preview Mermaid Support](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)
-
-GitHub renders Mermaid diagrams natively, so no extension is needed when viewing on GitHub.
-
----
-
 ## Getting Started
+
+### Prerequisites
+
+- Docker and Docker Compose
+
+### Launch the application
 
 ```bash
 git clone https://github.com/tks-mtr/log-lens.git
 cd log-lens
+
+# Copy environment file
+cp backend/.env.example backend/.env
+
+# Build and start all services
 docker-compose up --build
 ```
 
+Database migrations run automatically on startup via `alembic upgrade head`.
+
 | Service | URL |
 |---------|-----|
-| Frontend | http://localhost:3000 |
 | Backend API | http://localhost:8000 |
 | API Docs (Swagger UI) | http://localhost:8000/docs |
+| Frontend (not yet implemented) | http://localhost:3000 |
+
+### Health check
+
+```bash
+curl http://localhost:8000/health
+# {"status":"ok"}
+```
 
 ---
 
 ## Running Tests
 
-```bash
-# Backend tests
-docker-compose exec backend pytest
+### Backend tests
 
-# Frontend tests
-docker-compose exec frontend npm test
+Tests are split into two environments:
+
+**Without Docker (unit tests — no DB required):**
+
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# Core config tests
+pytest tests/core/
+
+# Schema tests
+pytest tests/schemas/
+
+# Service layer tests (Repository is mocked)
+pytest tests/services/
 ```
+
+**With Docker (integration tests — requires db-test container):**
+
+```bash
+# Start only the test database
+docker-compose up -d db-test
+
+# Repository integration tests (real PostgreSQL)
+pytest backend/tests/repositories/
+
+# Router integration tests (full stack with real DB)
+pytest backend/tests/routers/
+```
+
+**Run all tests with coverage:**
+
+```bash
+docker-compose up -d db-test
+cd backend
+pytest --cov=app --cov-report=term-missing
+```
+
+---
+
+## API Overview
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/logs` | Create a log entry |
+| GET | `/api/v1/logs` | List logs with filtering and pagination |
+| GET | `/api/v1/logs/{id}` | Get a single log entry |
+| PATCH | `/api/v1/logs/{id}` | Partially update a log entry |
+| DELETE | `/api/v1/logs/{id}` | Delete a log entry (204 No Content) |
+| GET | `/api/v1/logs/analytics/summary` | Severity summary and source histogram |
+| GET | `/api/v1/logs/analytics/timeseries` | Time-series aggregation by interval |
+| GET | `/api/v1/logs/export/csv` | Export logs as UTF-8 BOM CSV |
 
 ---
 
@@ -64,18 +124,29 @@ The goal is not just to *display* logs, but to help users *make decisions* from 
 | Backend Developer | Investigating and tracing error causes |
 | Team Lead | Tracking system-wide health trends over time |
 
-For details, see [`docs/requirements/personas_usecases.md`](docs/requirements/personas_usecases.md).
+### Backend Architecture
 
-### Roles & Permissions
+The backend follows a **layered architecture** to keep each concern isolated and testable:
 
-Authentication is out of scope for this implementation. The UI is built assuming an admin role. Roles are defined conceptually as follows:
+```
+Router → Service → Repository → PostgreSQL
+```
 
-| Role | Permissions |
-|------|------------|
-| Admin | Full access (CRUD including delete) |
-| General User | Read, search, create, and edit (delete not permitted) |
+- **Router**: HTTP routing and request/response validation via Pydantic schemas
+- **Service**: Business logic (date range validation, filter orchestration); keeps Router and Repository decoupled
+- **Repository**: All DB access via SQLAlchemy v2 `AsyncSession`
 
-Role-based authentication is noted as a future improvement in [`docs/backlog.md`](docs/backlog.md).
+### Key Design Decisions
+
+| Topic | Decision | Rationale |
+|-------|----------|-----------|
+| `timestamp` default | Set in `LogRepository.create` using `datetime.now(timezone.utc)` | Keeps the Service layer free from infrastructure concerns; Repository owns the DB write |
+| Severity validation | Pydantic `Literal` + PostgreSQL `CHECK` constraint | Double-layer defense: reject invalid values at the schema level before hitting the DB |
+| Source filter strategy | Partial match (`ilike`) for list endpoint; exact match for analytics | List supports keyword search UX; analytics requires precise grouping by source name |
+| Error response on 500 | Stack trace logged via `logger.exception`, never exposed in response | Security best practice: internal errors must not leak implementation details to clients |
+| CSV export | UTF-8 BOM + filename `logs_YYYYMMDD.csv` | BOM ensures Excel compatibility without encoding issues |
+| `updated_at` update | SQLAlchemy client-side `onupdate=func.now()` + `flush()` + `refresh()` | Triggers the UPDATE statement to propagate the new timestamp from the DB |
+| Migration on startup | `alembic upgrade head` in Dockerfile CMD | Ensures schema is always up to date when the container starts; no manual steps required |
 
 ---
 
@@ -99,27 +170,32 @@ For detailed comparisons and rationale, see [`docs/design/tech_selection.md`](do
 
 ---
 
-## Architecture
+## Roles & Permissions
 
-The backend follows a **layered architecture** to keep each concern isolated and testable:
+Authentication is out of scope for this implementation. The UI is built assuming an admin role. Roles are defined conceptually as follows:
 
-```
-Router → Service → Repository → PostgreSQL
-```
+| Role | Permissions |
+|------|------------|
+| Admin | Full access (CRUD including delete) |
+| General User | Read, search, create, and edit (delete not permitted) |
 
-- **Router**: Handles HTTP routing and delegates request/response validation to Pydantic schemas
-- **Service**: Encapsulates business logic; keeps Router and Repository decoupled
-- **Repository**: Manages all DB access via SQLAlchemy v2 `AsyncSession`
+---
 
-The frontend uses Next.js **App Router** with a clear separation between Server Components (layout, static content) and Client Components (filters, forms, charts). API communication is managed centrally via TanStack Query.
+## Viewing Design Documents
+
+Design documents under `docs/system/` use [Mermaid](https://mermaid.js.org/) diagrams (ER diagram, screen flow, sequence diagrams). To preview them locally in VS Code, install the following extension:
+
+- [Markdown Preview Mermaid Support](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)
+
+GitHub renders Mermaid diagrams natively, so no extension is needed when viewing on GitHub.
 
 ---
 
 ## Future Improvements
 
-The following features were out of scope for this submission but are worth pursuing. See [`docs/backlog.md`](docs/backlog.md) for details.
+The following features were out of scope for this submission but are worth pursuing:
 
 - **Authentication & Authorization**: JWT-based role separation between Admin and General Users
 - **Retention Policy**: Automatic deletion of logs older than a configurable period
 - **Real-time Updates**: WebSocket-based push notifications (currently replaced by a manual refresh button)
-- **AI Debate Engine**: Automatic insight extraction using two OSS LLMs in a debate-style loop, analyzing logs against requirements and specifications
+- **Frontend Implementation**: Next.js dashboard with filters, charts, and CSV export UI

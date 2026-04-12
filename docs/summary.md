@@ -4,6 +4,47 @@
 
 ---
 
+## 2026-04-12 | Phase 3.5 ハーネス設計・Phase 3.6 バックエンド見直し完了
+
+### 実施した作業
+
+#### Phase 3.5 — ハーネス設計見直し（`feature/harness-review`）
+- Anthropic Engineering 記事をもとに Planner / Generator / Evaluator の3エージェント構成を設計
+- `.claude/rules/rules_harness.md` を新規作成（エージェント詳細・起動方法・ファイルフォーマット定義）
+- `CLAUDE.md` のフェーズ表に Phase 3.5・3.6 を追加、`Claudeの役割` セクションを `@` インポート形式に変更
+- `docs/harness/` ディレクトリを新設（Sprint Contract・Feedback・Handoff の格納先）
+
+#### Phase 3.6 — バックエンド見直し（`feature/backend-review`）
+- **Planner エージェント**: 課題 PDF と `backend_plan.md` を照合し W-01〜W-07 の7件を検出・Sprint Contract 作成
+- **Generator エージェント**: W-01〜W-07 を全件修正
+- **Evaluator エージェント**: 全テスト 138件 PASS を確認・Sprint Contract を最終承認
+
+### 修正内容（W-01〜W-07）
+
+| ID | 内容 |
+|----|------|
+| W-01 | `README.md`（英語）/ `README.ja.md`（日本語）を新規作成 |
+| W-02 | `backend_plan.md` の `timestamp` デフォルト設定の記述を Repository 層に修正 |
+| W-03 | `updated_at` 有効性検証テストを追加（変化の確認は Phase 4 Playwright に引き継ぎ） |
+| W-04 | `main.py` にグローバル例外ハンドラを追加（`logger.exception` + safe response） |
+| W-05 | `Dockerfile` CMD に `alembic upgrade head` を追加し起動時マイグレーションを自動化 |
+| W-06 | analytics histogram・timeseries のデータ構造検証テストを追加 |
+| W-07 | 空ボディ PATCH テストを追加 |
+
+### 設計上の意思決定
+
+- **`rules_harness.md` を `.claude/rules/` に配置**: `docs/design/` ではなく Claudeの振る舞いルールとして他の `rules_*.md` と統一
+- **Sprint Contract は `_plan.md` を参照元とする独立ファイル**: `_plan.md`（作業ステップ管理）と Sprint Contract（受け入れ基準）を役割分離
+- **Agent ツールでエージェント起動、Task ツールで進捗管理**: 役割を明確に分離
+- **W-03 の残課題を Sprint Contract に明記**: pytest では同一トランザクション内で `now()` が固定値になるため完全な検証が困難。Phase 4 の Playwright E2E で `updated_at` の変化を検証する
+
+### 動作確認（2026-04-12 時点）
+
+- 全テスト 138件グリーン（venv 70件 + Docker 68件）
+- PR #3 時点での 134件から4件追加
+
+---
+
 ## 2026-04-11 | feature/backend コードレビュー・リファクタリング・テストルール整備
 
 ### 実施した作業
