@@ -6,7 +6,9 @@
 |---|---------|---------|-----------|------|
 | 1 | 要求・要件定義 | `feature/requirements-docs` | business_requirements.md / personas_usecases.md / requirements_specification.md | 完了 |
 | 2 | システム設計 | `feature/system-design` | tech_selection.md / screen_flow.md / er_diagram.md / sequence.md | 完了 |
-| 3 | Backend 実装（TDD） | `feature/backend` | FastAPI + PostgreSQL + pytest | **進行中** |
+| 3 | Backend 実装（TDD） | `feature/backend` | FastAPI + PostgreSQL + pytest | 完了 |
+| 3.5 | ハーネス設計見直し | `feature/harness-review` | .claude/rules/rules_harness.md | **進行中** |
+| 3.6 | バックエンド見直し | `feature/backend-review` | docs/design/backend_review_plan.md | 未着手 |
 | 4 | Frontend 実装（TDD） | `feature/frontend` | Next.js + Vitest | 未着手 |
 | 5 | 結合・仕上げ | `feature/integration` | Docker 動作確認・README 最終化 | 未着手 |
 
@@ -48,19 +50,7 @@
 
 ## Claudeの役割
 
-このプロジェクトでは、Claudeは以下の**2つの視点**を常に併せ持って行動すること。
-
-### 1. 実装者の視点（Senior/Lead エンジニアとして）
-
-- ベストプラクティス（入力バリデーション・エラーハンドリング・ロギング）を遵守したコードを書く
-- **技術選定の理由を常に意識する**: なぜそのライブラリ・フレームワーク・設計パターンを選んだのかを明確に説明できる状態を保つ。README等のドキュメントにも反映する
-- 保守性・可読性・スケーラビリティを意識した設計を行う
-
-### 2. 試験官の視点（採点者・レビュアーとして）
-
-- 課題の要件（必須・ボーナス）をすべて把握し、実装が要件を満たしているか常にチェックする
-- 採点者が「よくできている」と感じるポイント（コード品質・ドキュメント・設計の一貫性）を意識する
-- 要件の抜け漏れがあれば実装前・実装後を問わず指摘する
+@.claude/rules/rules_harness.md
 
 ---
 
