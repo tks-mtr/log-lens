@@ -13,7 +13,7 @@
 
 ## 作業ステップ
 
-### Step 1 — Planner：要件整合性確認 [ ]
+### Step 1 — Planner：要件整合性確認 [x]
 
 - **エージェント:** Planner
 - **読み込むファイル:**
@@ -27,7 +27,7 @@
 
 ---
 
-### Step 2 — Generator：コード見直し・修正 [ ]
+### Step 2 — Generator：コード見直し・修正 [x]
 
 - **エージェント:** Generator
 - **読み込むファイル:**
@@ -41,7 +41,7 @@
 
 ---
 
-### Step 3 — Evaluator：テスト実行・最終確認 [ ]
+### Step 3 — Evaluator：テスト実行・最終確認 [x]
 
 - **エージェント:** Evaluator
 - **読み込むファイル:**
@@ -58,6 +58,6 @@
 
 ## 完了条件
 
-- [ ] Sprint Contract の全受け入れ基準が満たされている
-- [ ] 全テストがグリーン
-- [ ] PR直前コミット（CLAUDE.md / README.md / README.ja.md / docs/summary.md）完了
+- [x] Sprint Contract の全受け入れ基準が満たされている
+- [x] 全テストがグリーン（138件 PASS）
+- [x] PR直前コミット（CLAUDE.md / README.md / README.ja.md / docs/summary.md）完了

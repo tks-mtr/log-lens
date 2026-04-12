@@ -8,7 +8,7 @@
 | 2 | システム設計 | `feature/system-design` | tech_selection.md / screen_flow.md / er_diagram.md / sequence.md | 完了 |
 | 3 | Backend 実装（TDD） | `feature/backend` | FastAPI + PostgreSQL + pytest | 完了 |
 | 3.5 | ハーネス設計見直し | `feature/harness-review` | .claude/rules/rules_harness.md | **進行中** |
-| 3.6 | バックエンド見直し | `feature/backend-review` | docs/design/backend_review_plan.md | 未着手 |
+| 3.6 | バックエンド見直し | `feature/backend-review` | docs/design/backend_review_plan.md | 完了 |
 | 4 | Frontend 実装（TDD） | `feature/frontend` | Next.js + Vitest | 未着手 |
 | 5 | 結合・仕上げ | `feature/integration` | Docker 動作確認・README 最終化 | 未着手 |
 
