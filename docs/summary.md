@@ -4,6 +4,40 @@
 
 ---
 
+## 2026-04-14 | Sprint Fix 追加修正・severity 共通化・PR#6 マージ
+
+### 実施した作業
+
+#### severity 表示順修正（U-14・U-15）
+- 凡例（Legend）の表示順を `CRITICAL/ERROR → INFO/WARNING` から `INFO/WARNING → ERROR/CRITICAL` の昇順に変更
+- Tooltip ホバー時のアイテム表示順も同様に昇順に統一。Recharts stacked bar のデフォルト逆順に対応するため `CustomTooltip` コンポーネントで `SEVERITY_ORDER.indexOf()` によるソートを実装
+- Tooltip テキスト色を `entry.color`（severity 色）から `hsl(var(--card-foreground))` に変更し、各行先頭に severity カラーの小さな四角アイコンを追加（視認性とダーク/ライトモード対応を両立）
+
+#### バックエンド severity ソート修正（B-03）
+- ログ一覧の severity 降順ソートがアルファベット順（W > I > E > C）になっていた問題を修正
+- SQLAlchemy `CASE` 式で `INFO=0 / WARNING=1 / ERROR=2 / CRITICAL=3` の重大度ランクにマッピングし、降順で `CRITICAL` が先頭になるよう修正
+- `backend/app/constants/severity.py` を新設し `SEVERITY_ORDER` を定義。`models/log.py` の `CheckConstraint` と `log_repository.py` のソート式から参照
+
+#### severity 定数の共通化（R-01〜R-03）
+- `frontend/src/constants/severity.ts` に `SEVERITY_ORDER`・`SEVERITIES`・`SEVERITY_COLORS` を集約
+- `LogFilterPanel.tsx`・`FilterPanel.tsx`・`LogForm.tsx`・`page.tsx`・`TimeseriesChart.tsx`・`Histogram.tsx` のローカル重複定義をすべて削除して import に置き換え
+- `CustomTooltip` と `createTwoRowLegend`（ファクトリ関数）を `dashboard/chartUtils.tsx` に抽出。`createTwoRowLegend(swatchClassName)` で LineChart（`h-0.5` 細線）と BarChart（`h-2` 矩形）のスウォッチ差異を吸収
+
+### 設計上の意思決定
+
+- **constants ディレクトリの分離**: severity 定数は schemas（Pydantic 型）でも models（SQLAlchemy）でもなく独立した `constants/` に置く。循環インポートを避けつつ複数層から参照可能にする
+- **`severity_rank()` はリポジトリ内インライン**: 1箇所しか使わないヘルパーを constants に置かない（YAGNI）。`SEVERITY_ORDER` だけ共通化し、CASE 式構築は利用箇所に残す
+- **`createTwoRowLegend` ファクトリ関数**: LineChart と BarChart でスウォッチ高さが異なるため、引数でカスタマイズ可能なファクトリ関数として実装し重複を解消
+
+### 動作確認
+
+- Vitest: 84件 PASS
+- Playwright: 18件 PASS
+- Docker: severity 降順ソートで CRITICAL が先頭に表示されることを確認
+- PR#6（`feature/frontend` → `main`）マージ済み
+
+---
+
 ## 2026-04-13 | ThemeToggle・AppSidebar UI 修正
 
 ### 実施した作業
