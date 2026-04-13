@@ -6,6 +6,7 @@ import { z } from 'zod'
 import type { Log, Severity } from '@/types/log'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { useSources } from '@/hooks/useSources'
 
 const SEVERITIES: Severity[] = ['INFO', 'WARNING', 'ERROR', 'CRITICAL']
 
@@ -36,6 +37,12 @@ export function LogForm({
   isSubmitting = false,
   submitLabel = 'Save',
 }: LogFormProps) {
+  const { data: fetchedSources = [] } = useSources()
+  // 編集時: 既存の source 値が取得済みリストになければ先頭に追加（データ整合性のため）
+  const sources = fetchedSources.includes(defaultValues?.source ?? '')
+    ? fetchedSources
+    : [...(defaultValues?.source ? [defaultValues.source] : []), ...fetchedSources]
+
   const {
     register,
     handleSubmit,
@@ -122,14 +129,18 @@ export function LogForm({
         <label htmlFor="log-form-source" className="text-sm font-medium">
           Source <span className="text-red-500">*</span>
         </label>
-        <Input
+        <select
           id="log-form-source"
-          type="text"
-          placeholder="e.g. api-server"
           {...register('source')}
           data-testid="log-form-source"
           disabled={isSubmitting}
-        />
+          className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50 dark:bg-input/30"
+        >
+          <option value="" disabled>Select source...</option>
+          {sources.map((s) => (
+            <option key={s} value={s}>{s}</option>
+          ))}
+        </select>
         {errors.source && (
           <p className="text-sm text-red-500" data-testid="log-form-source-error">
             {errors.source.message}

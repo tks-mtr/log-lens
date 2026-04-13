@@ -4,6 +4,10 @@ import userEvent from '@testing-library/user-event'
 import { LogForm } from './LogForm'
 import type { Log } from '@/types/log'
 
+vi.mock('@/hooks/useSources', () => ({
+  useSources: () => ({ data: ['api-gateway', 'auth-service'] }),
+}))
+
 const MOCK_LOG: Log = {
   id: 1,
   timestamp: '2026-04-01T10:00:00Z',
@@ -55,7 +59,7 @@ describe('LogForm', () => {
     render(<LogForm onSubmit={onSubmit} onCancel={onCancel} />)
 
     await user.selectOptions(screen.getByTestId('log-form-severity'), 'CRITICAL')
-    await user.type(screen.getByTestId('log-form-source'), 'test-source')
+    await user.selectOptions(screen.getByTestId('log-form-source'), 'api-gateway')
     await user.type(screen.getByTestId('log-form-message'), 'test message')
 
     await user.click(screen.getByTestId('log-form-submit'))
@@ -64,7 +68,7 @@ describe('LogForm', () => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
       const callArg = onSubmit.mock.calls[0][0]
       expect(callArg.severity).toBe('CRITICAL')
-      expect(callArg.source).toBe('test-source')
+      expect(callArg.source).toBe('api-gateway')
       expect(callArg.message).toBe('test message')
     })
   })
@@ -79,7 +83,7 @@ describe('LogForm', () => {
 
     await user.selectOptions(screen.getByTestId('log-form-severity'), 'INFO')
     await user.type(screen.getByTestId('log-form-message'), 'test message')
-    // source は空のまま
+    // source は未選択のまま
 
     await user.click(screen.getByTestId('log-form-submit'))
 
@@ -99,7 +103,7 @@ describe('LogForm', () => {
     render(<LogForm onSubmit={onSubmit} onCancel={onCancel} />)
 
     await user.selectOptions(screen.getByTestId('log-form-severity'), 'WARNING')
-    await user.type(screen.getByTestId('log-form-source'), 'test-source')
+    await user.selectOptions(screen.getByTestId('log-form-source'), 'api-gateway')
     // message は空のまま
 
     await user.click(screen.getByTestId('log-form-submit'))
@@ -119,7 +123,7 @@ describe('LogForm', () => {
 
     render(<LogForm onSubmit={onSubmit} onCancel={onCancel} />)
 
-    await user.type(screen.getByTestId('log-form-source'), 'test-source')
+    await user.selectOptions(screen.getByTestId('log-form-source'), 'api-gateway')
     await user.type(screen.getByTestId('log-form-message'), 'test message')
     // severity は選択しない
 
@@ -141,7 +145,7 @@ describe('LogForm', () => {
 
     // timestamp は入力しない
     await user.selectOptions(screen.getByTestId('log-form-severity'), 'ERROR')
-    await user.type(screen.getByTestId('log-form-source'), 'test-source')
+    await user.selectOptions(screen.getByTestId('log-form-source'), 'auth-service')
     await user.type(screen.getByTestId('log-form-message'), 'test message')
 
     await user.click(screen.getByTestId('log-form-submit'))

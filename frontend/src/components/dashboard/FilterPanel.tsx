@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import type { AnalyticsFilters } from '@/hooks/useAnalytics'
 import type { Severity } from '@/types/log'
+import { useSources } from '@/hooks/useSources'
 
 interface FilterPanelProps {
   onApply: (filters: AnalyticsFilters) => void
@@ -15,6 +16,7 @@ export function FilterPanel({ onApply }: FilterPanelProps) {
   const [end, setEnd] = useState<string>('')
   const [selectedSeverities, setSelectedSeverities] = useState<Severity[]>([])
   const [source, setSource] = useState<string>('')
+  const { data: sources = [] } = useSources()
 
   function toggleSeverity(sev: Severity) {
     setSelectedSeverities((prev) =>
@@ -82,12 +84,18 @@ export function FilterPanel({ onApply }: FilterPanelProps) {
         <label className="text-xs text-muted-foreground">Source</label>
         <input
           type="text"
+          list="dashboard-source-options"
           value={source}
           onChange={(e) => setSource(e.target.value)}
-          placeholder="Enter source (exact match)..."
+          placeholder="Search by source..."
           className="rounded border border-input bg-background px-2 py-1 text-sm min-w-[220px]"
           data-testid="filter-source"
         />
+        <datalist id="dashboard-source-options">
+          {sources.map((s) => (
+            <option key={s} value={s} />
+          ))}
+        </datalist>
       </div>
 
       {/* Apply */}

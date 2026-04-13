@@ -2,6 +2,10 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { FilterPanel } from './FilterPanel'
 
+vi.mock('@/hooks/useSources', () => ({
+  useSources: () => ({ data: ['api-gateway', 'auth-service'] }),
+}))
+
 describe('FilterPanel', () => {
   // V-08: 正常系 — Apply ボタン押下で onApply が現在の入力値を引数として呼ばれる
   it('calls_onApply_with_current_input_values_when_apply_clicked', () => {
@@ -57,7 +61,7 @@ describe('FilterPanel', () => {
   it('has_exact_match_placeholder_for_source_input', () => {
     render(<FilterPanel onApply={vi.fn()} />)
     const sourceInput = screen.getByTestId('filter-source')
-    expect(sourceInput).toHaveAttribute('placeholder', 'Enter source (exact match)...')
+    expect(sourceInput).toHaveAttribute('placeholder', 'Search by source...')
   })
 
   // 追加: Apply ボタンが存在することを確認 (C-07)
