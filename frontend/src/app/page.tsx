@@ -29,7 +29,6 @@ export default function DashboardPage() {
     error: timeseriesErrorObj,
   } = useAnalyticsTimeseries({ ...filters, interval })
 
-  const isLoading = summaryLoading || timeseriesLoading
   const isError = summaryError || timeseriesError
   const errorMessage =
     (summaryErrorObj as Error | null)?.message ||
@@ -59,7 +58,7 @@ export default function DashboardPage() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {isLoading
+        {summaryLoading
           ? SEVERITIES.map((sev) => (
               <div
                 key={sev}
@@ -79,7 +78,7 @@ export default function DashboardPage() {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="rounded-lg bg-card border border-border p-4">
-          {isLoading ? (
+          {timeseriesLoading ? (
             <div className="animate-pulse bg-muted rounded h-48" data-testid="skeleton-timeseries" />
           ) : (
             <TimeseriesChart
@@ -90,7 +89,7 @@ export default function DashboardPage() {
           )}
         </div>
         <div className="rounded-lg bg-card border border-border p-4">
-          {isLoading ? (
+          {summaryLoading ? (
             <div className="animate-pulse bg-muted rounded h-48" data-testid="skeleton-histogram" />
           ) : (
             <Histogram data={summaryData?.histogram ?? []} />

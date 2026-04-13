@@ -12,6 +12,32 @@ import {
 } from 'recharts'
 import type { TimeseriesEntry } from '@/types/log'
 
+function renderTwoRowLegend({ payload }: { payload?: readonly { value?: string; color?: string }[] }) {
+  if (!payload) return null
+  const row1 = payload.filter((p) => p.value === 'CRITICAL' || p.value === 'ERROR')
+  const row2 = payload.filter((p) => p.value === 'INFO' || p.value === 'WARNING')
+  return (
+    <div className="flex flex-col items-center gap-0.5 text-xs mt-1">
+      <div className="flex gap-4">
+        {row1.map((entry) => (
+          <span key={entry.value} className="flex items-center gap-1">
+            <span style={{ backgroundColor: entry.color }} className="inline-block w-3 h-0.5" />
+            {entry.value}
+          </span>
+        ))}
+      </div>
+      <div className="flex gap-4">
+        {row2.map((entry) => (
+          <span key={entry.value} className="flex items-center gap-1">
+            <span style={{ backgroundColor: entry.color }} className="inline-block w-3 h-0.5" />
+            {entry.value}
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 interface TimeseriesChartProps {
   data: TimeseriesEntry[]
   interval: 'hour' | 'day' | 'week'
@@ -63,9 +89,17 @@ export function TimeseriesChart({ data, interval, onIntervalChange }: Timeseries
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="timestamp" tick={{ fontSize: 11 }} />
-            <YAxis tick={{ fontSize: 11 }} />
-            <Tooltip />
-            <Legend />
+            <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: 'hsl(var(--card))',
+                border: '1px solid hsl(var(--border))',
+                color: 'hsl(var(--card-foreground))',
+              }}
+              labelStyle={{ color: 'hsl(var(--card-foreground))' }}
+              itemStyle={{ color: 'hsl(var(--card-foreground))' }}
+            />
+            <Legend content={renderTwoRowLegend} />
             <Line
               type="monotone"
               dataKey="INFO"
