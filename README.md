@@ -95,7 +95,7 @@ pytest tests/services/
 
 ```bash
 # Start only the test database
-docker-compose up -d db-test
+docker compose up -d db-test
 
 # Repository integration tests (real PostgreSQL)
 pytest backend/tests/repositories/
@@ -122,7 +122,7 @@ npm run test
 
 # E2E tests (Playwright) — 18 tests
 # Requires Docker services running (backend + DB) for API calls
-docker-compose up -d app db
+docker compose up -d app db
 npx playwright test
 # Playwright auto-starts the frontend dev server via webServer config
 ```
@@ -147,6 +147,10 @@ npx playwright test
 
 ## Design Philosophy
 
+### Development Approach
+
+Both backend and frontend were built following Test-Driven Development (TDD). Writing tests first made design intent explicit and allowed features to be built incrementally while preventing regressions.
+
 ### Concept
 
 > **"See the value through your logs — Log Lens"**
@@ -164,6 +168,12 @@ The goal is not just to *display* logs, but to help users *make decisions* from 
 | Operations Engineer | Daily monitoring and early anomaly detection |
 | Backend Developer | Investigating and tracing error causes |
 | Team Lead | Tracking system-wide health trends over time |
+
+Use cases per persona:
+
+- **Operations Engineer**: Start from the dashboard to detect anomalies via severity summary cards, then drill into Log List filtering by CRITICAL / ERROR to inspect details
+- **Backend Developer**: Use the source filter to scope by service name, pinpoint the incident time on the timeseries chart, then review individual logs in Log List
+- **Team Lead**: Review dashboard trends weekly or monthly to track changes in severity distribution and assess overall system health
 
 ### Backend Architecture
 
