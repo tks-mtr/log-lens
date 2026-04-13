@@ -3,13 +3,12 @@
 import { useState } from 'react'
 import type { AnalyticsFilters } from '@/hooks/useAnalytics'
 import type { Severity } from '@/types/log'
+import { SEVERITIES } from '@/constants/severity'
 import { useSources } from '@/hooks/useSources'
 
 interface FilterPanelProps {
   onApply: (filters: AnalyticsFilters) => void
 }
-
-const SEVERITIES: Severity[] = ['INFO', 'WARNING', 'ERROR', 'CRITICAL']
 
 export function FilterPanel({ onApply }: FilterPanelProps) {
   const [start, setStart] = useState<string>('')

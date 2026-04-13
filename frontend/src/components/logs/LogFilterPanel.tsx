@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import type { Severity, LogListParams } from '@/types/log'
 import { exportLogsCSV } from '@/lib/api'
+import { SEVERITIES } from '@/constants/severity'
 import { useSources } from '@/hooks/useSources'
 
 export interface LogFilterValues {
@@ -17,8 +18,6 @@ interface LogFilterPanelProps {
   onNewLog: () => void
   currentFilters?: LogFilterValues
 }
-
-const SEVERITIES: Severity[] = ['INFO', 'WARNING', 'ERROR', 'CRITICAL']
 
 export function LogFilterPanel({ onApply, onNewLog, currentFilters = {} }: LogFilterPanelProps) {
   const [start, setStart] = useState<string>(currentFilters.start ?? '')

@@ -10,7 +10,11 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts'
+import { CustomTooltip, createTwoRowLegend } from '@/components/dashboard/chartUtils'
+import { SEVERITY_COLORS } from '@/constants/severity'
 import type { HistogramEntry } from '@/types/log'
+
+const renderTwoRowLegend = createTwoRowLegend('h-2')
 
 interface StaggeredTickProps {
   x?: number
@@ -28,41 +32,8 @@ function StaggeredTick({ x = 0, y = 0, payload, index = 0 }: StaggeredTickProps)
   )
 }
 
-function renderTwoRowLegend({ payload }: { payload?: readonly { value?: string; color?: string }[] }) {
-  if (!payload) return null
-  const row1 = payload.filter((p) => p.value === 'CRITICAL' || p.value === 'ERROR')
-  const row2 = payload.filter((p) => p.value === 'INFO' || p.value === 'WARNING')
-  return (
-    <div className="flex flex-col items-center gap-0.5 text-xs mt-1">
-      <div className="flex gap-4">
-        {row1.map((entry) => (
-          <span key={entry.value} className="flex items-center gap-1">
-            <span style={{ backgroundColor: entry.color }} className="inline-block w-3 h-2" />
-            {entry.value}
-          </span>
-        ))}
-      </div>
-      <div className="flex gap-4">
-        {row2.map((entry) => (
-          <span key={entry.value} className="flex items-center gap-1">
-            <span style={{ backgroundColor: entry.color }} className="inline-block w-3 h-2" />
-            {entry.value}
-          </span>
-        ))}
-      </div>
-    </div>
-  )
-}
-
 interface HistogramProps {
   data: HistogramEntry[]
-}
-
-const SEVERITY_COLORS = {
-  INFO: '#3b82f6',
-  WARNING: '#eab308',
-  ERROR: '#f97316',
-  CRITICAL: '#ef4444',
 }
 
 export function Histogram({ data }: HistogramProps) {
@@ -85,15 +56,7 @@ export function Histogram({ data }: HistogramProps) {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="source" tick={<StaggeredTick />} interval={0} />
           <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: 'hsl(var(--card))',
-              border: '1px solid hsl(var(--border))',
-              color: 'hsl(var(--card-foreground))',
-            }}
-            labelStyle={{ color: 'hsl(var(--card-foreground))' }}
-            itemStyle={{ color: 'hsl(var(--card-foreground))' }}
-          />
+          <Tooltip content={<CustomTooltip />} />
           <Legend content={renderTwoRowLegend} />
           <Bar dataKey="INFO" stackId="a" fill={SEVERITY_COLORS.INFO} />
           <Bar dataKey="WARNING" stackId="a" fill={SEVERITY_COLORS.WARNING} />

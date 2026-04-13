@@ -32,6 +32,7 @@
 
 - [x] **B-01**: `GET /api/v1/logs/sources` — DB に存在する source 名の一覧を重複なし・昇順で返すエンドポイントを追加する（Router / Service / Repository / テスト）
 - [x] **B-02**: `lib/api.ts` — `getSources(): Promise<string[]>` を追加する
+- [x] **B-03**: ログ一覧 severity ソート順修正 — severity カラムのソートがアルファベット順になっていた問題を修正する。`backend/app/constants/severity.py` に `SEVERITY_ORDER` を定義し、`LogRepository.list()` で SQLAlchemy `CASE` 式による重大度順ソート（INFO=0 / WARNING=1 / ERROR=2 / CRITICAL=3）に変更する
 
 ### UI/UX 修正
 
@@ -48,6 +49,11 @@
 - [x] **U-11**: ログ詳細画面 — message が長い場合にコンテナ枠を超えてはみ出す問題を修正する。`break-words` + `min-w-0` で CSS Grid 内での枠内折り返し表示にする
 - [x] **U-12**: Dashboard FilterPanel — Source の入力欄をコンボボックスに変更する（`useSources` フックで候補取得・自由入力も維持）
 - [x] **U-13**: LogForm（新規作成・編集フォーム）— Source の入力欄をセレクトボックスに変更する（`useSources` フックで候補取得。編集時に既存 source が選択肢にない場合は先頭に追加して表示）
+- [x] **U-14**: 時系列チャート・Severity Distribution by Source — 凡例（Legend）の表示順を `INFO → WARNING → ERROR → CRITICAL` の昇順に変更する（上段: INFO / WARNING、下段: ERROR / CRITICAL）
+- [x] **U-15**: 時系列チャート・Severity Distribution by Source — Tooltip ホバー時のアイテム表示順を `INFO → WARNING → ERROR → CRITICAL` の昇順に変更する。Recharts のデフォルト順が逆転するケースに対応するため `CustomTooltip` コンポーネントで payload をソートして表示する。アイテム行は各 severity カラーの小さな四角＋テキスト色 `hsl(var(--card-foreground))` で視認性を確保する
+- [x] **R-01**: severity 定数の共通化（SEVERITY_ORDER） — `backend/app/constants/severity.py`・`frontend/src/constants/severity.ts` に `SEVERITY_ORDER` を集約し、`models/log.py` の `CheckConstraint`・`log_repository.py` のソート式・`TimeseriesChart.tsx`・`Histogram.tsx` の各参照箇所から import して使用する
+- [x] **R-02**: severity 定数の共通化（SEVERITIES・SEVERITY_COLORS） — `frontend/src/constants/severity.ts` に `SEVERITIES`・`SEVERITY_COLORS` を追加し、`LogFilterPanel.tsx`・`FilterPanel.tsx`・`LogForm.tsx`・`page.tsx`・`TimeseriesChart.tsx`・`Histogram.tsx` のローカル定義を削除して import に置き換える
+- [x] **R-03**: チャート共通コンポーネントの抽出 — `CustomTooltip`・`renderTwoRowLegend`（`createTwoRowLegend` ファクトリ関数）を `frontend/src/components/dashboard/chartUtils.tsx` に抽出し、`TimeseriesChart.tsx`・`Histogram.tsx` のローカル重複定義を削除する
 
 ---
 

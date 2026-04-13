@@ -8,8 +8,7 @@ import { FilterPanel } from '@/components/dashboard/FilterPanel'
 import { useAnalyticsSummary, useAnalyticsTimeseries } from '@/hooks/useAnalytics'
 import type { AnalyticsFilters } from '@/hooks/useAnalytics'
 import type { Severity } from '@/types/log'
-
-const SEVERITIES: Severity[] = ['INFO', 'WARNING', 'ERROR', 'CRITICAL']
+import { SEVERITIES } from '@/constants/severity'
 
 export default function DashboardPage() {
   const [filters, setFilters] = useState<AnalyticsFilters>({})

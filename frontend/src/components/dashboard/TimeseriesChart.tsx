@@ -10,33 +10,11 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts'
+import { CustomTooltip, createTwoRowLegend } from '@/components/dashboard/chartUtils'
+import { SEVERITY_COLORS } from '@/constants/severity'
 import type { TimeseriesEntry } from '@/types/log'
 
-function renderTwoRowLegend({ payload }: { payload?: readonly { value?: string; color?: string }[] }) {
-  if (!payload) return null
-  const row1 = payload.filter((p) => p.value === 'CRITICAL' || p.value === 'ERROR')
-  const row2 = payload.filter((p) => p.value === 'INFO' || p.value === 'WARNING')
-  return (
-    <div className="flex flex-col items-center gap-0.5 text-xs mt-1">
-      <div className="flex gap-4">
-        {row1.map((entry) => (
-          <span key={entry.value} className="flex items-center gap-1">
-            <span style={{ backgroundColor: entry.color }} className="inline-block w-3 h-0.5" />
-            {entry.value}
-          </span>
-        ))}
-      </div>
-      <div className="flex gap-4">
-        {row2.map((entry) => (
-          <span key={entry.value} className="flex items-center gap-1">
-            <span style={{ backgroundColor: entry.color }} className="inline-block w-3 h-0.5" />
-            {entry.value}
-          </span>
-        ))}
-      </div>
-    </div>
-  )
-}
+const renderTwoRowLegend = createTwoRowLegend('h-0.5')
 
 interface TimeseriesChartProps {
   data: TimeseriesEntry[]
@@ -50,12 +28,6 @@ const INTERVALS: { value: 'hour' | 'day' | 'week'; label: string }[] = [
   { value: 'week', label: 'Week' },
 ]
 
-const SEVERITY_COLORS = {
-  INFO: '#3b82f6',
-  WARNING: '#eab308',
-  ERROR: '#f97316',
-  CRITICAL: '#ef4444',
-}
 
 export function TimeseriesChart({ data, interval, onIntervalChange }: TimeseriesChartProps) {
   return (
@@ -90,15 +62,7 @@ export function TimeseriesChart({ data, interval, onIntervalChange }: Timeseries
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="timestamp" tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: 'hsl(var(--card))',
-                border: '1px solid hsl(var(--border))',
-                color: 'hsl(var(--card-foreground))',
-              }}
-              labelStyle={{ color: 'hsl(var(--card-foreground))' }}
-              itemStyle={{ color: 'hsl(var(--card-foreground))' }}
-            />
+            <Tooltip content={<CustomTooltip />} />
             <Legend content={renderTwoRowLegend} />
             <Line
               type="monotone"

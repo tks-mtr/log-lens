@@ -6,9 +6,8 @@ import { z } from 'zod'
 import type { Log, Severity } from '@/types/log'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { SEVERITIES } from '@/constants/severity'
 import { useSources } from '@/hooks/useSources'
-
-const SEVERITIES: Severity[] = ['INFO', 'WARNING', 'ERROR', 'CRITICAL']
 
 // W-04: timestamp は省略可。空文字は許容する（送信時にキーから除外）
 const logFormSchema = z.object({
