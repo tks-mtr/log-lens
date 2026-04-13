@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import type { Severity, LogListParams } from '@/types/log'
 import { exportLogsCSV } from '@/lib/api'
+import { useSources } from '@/hooks/useSources'
 
 export interface LogFilterValues {
   start?: string
@@ -26,6 +27,7 @@ export function LogFilterPanel({ onApply, onNewLog, currentFilters = {} }: LogFi
     currentFilters.severity ?? []
   )
   const [source, setSource] = useState<string>(currentFilters.source ?? '')
+  const { data: sources = [] } = useSources()
 
   function toggleSeverity(sev: Severity) {
     setSelectedSeverities((prev) =>
@@ -87,9 +89,6 @@ export function LogFilterPanel({ onApply, onNewLog, currentFilters = {} }: LogFi
       <div className="flex flex-col gap-1">
         <label className="text-xs text-muted-foreground">Severity</label>
         <div className="flex gap-1 flex-wrap" data-testid="log-filter-severity">
-          <span className="text-xs text-muted-foreground self-center mr-1">
-            {selectedSeverities.length === 0 ? 'All Severities' : ''}
-          </span>
           {SEVERITIES.map((sev) => (
             <button
               key={sev}
@@ -109,17 +108,23 @@ export function LogFilterPanel({ onApply, onNewLog, currentFilters = {} }: LogFi
         </div>
       </div>
 
-      {/* Source — W-01: 部分一致であることをプレースホルダーで明示 */}
+      {/* Source — W-01: 部分一致。datalist で候補を表示しつつ自由入力も許容 */}
       <div className="flex flex-col gap-1">
         <label className="text-xs text-muted-foreground">Source</label>
         <input
           type="text"
+          list="source-options"
           value={source}
           onChange={(e) => setSource(e.target.value)}
           placeholder="Search by source..."
           className="rounded border border-input bg-background px-2 py-1 text-sm min-w-[220px]"
           data-testid="log-filter-source"
         />
+        <datalist id="source-options">
+          {sources.map((s) => (
+            <option key={s} value={s} />
+          ))}
+        </datalist>
       </div>
 
       {/* Apply */}

@@ -8,6 +8,7 @@ import {
   getAnalyticsSummary,
   getAnalyticsTimeseries,
   exportLogsCSV,
+  getSources,
   buildSearchParams,
 } from './api'
 import type { Log, LogListResponse, AnalyticsSummaryResponse, AnalyticsTimeseriesResponse } from '@/types/log'
@@ -316,5 +317,26 @@ describe('buildSearchParams', () => {
     expect(str).not.toContain('source')
     expect(str).not.toContain('null')
     expect(str).toContain('limit=50')
+  })
+})
+
+// getSources
+// ============================================================
+describe('getSources', () => {
+  it('test_getSources_正常系_source一覧を返す', async () => {
+    const mockSources = ['api-gateway', 'auth-service']
+    vi.mocked(fetch).mockResolvedValueOnce(
+      new Response(JSON.stringify(mockSources), { status: 200 })
+    )
+    const result = await getSources()
+    expect(result).toEqual(mockSources)
+    expect(fetch).toHaveBeenCalledWith(expect.stringContaining('/logs/sources'))
+  })
+
+  it('test_getSources_異常系_HTTPエラーでErrorをスロー', async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      new Response(JSON.stringify({ detail: 'Server error' }), { status: 500 })
+    )
+    await expect(getSources()).rejects.toThrow('Server error')
   })
 })

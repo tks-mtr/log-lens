@@ -52,7 +52,7 @@
 
 - **エージェント:** Generator → Evaluator
 - **読み込むファイル:**
-  - `docs/harness/sprint_frontend_setup_contract.md`
+  - `docs/sprint/sprint_frontend_setup_contract.md`
   - `docs/design/frontend_layout.md`（Sprint 1 成果物）
 - **成果物:**
   - `frontend/` ディレクトリ（Next.js プロジェクト）
@@ -78,7 +78,7 @@
 
 - **エージェント:** Planner → Generator → Evaluator
 - **読み込むファイル:**
-  - `docs/harness/sprint_dashboard_contract.md`
+  - `docs/sprint/sprint_dashboard_contract.md`
   - `docs/design/frontend_layout.md`
 - **成果物:**
   - `frontend/src/app/page.tsx`（ダッシュボードページ）
@@ -99,7 +99,7 @@
 
 - **エージェント:** Planner → Generator → Evaluator
 - **読み込むファイル:**
-  - `docs/harness/sprint_log_list_contract.md`
+  - `docs/sprint/sprint_log_list_contract.md`
 - **成果物:**
   - `frontend/src/app/logs/page.tsx`（ログ一覧ページ）
   - `frontend/src/components/logs/LogTable.tsx` + テスト
@@ -119,7 +119,7 @@
 
 - **エージェント:** Planner → Generator → Evaluator
 - **読み込むファイル:**
-  - `docs/harness/sprint_log_detail_contract.md`
+  - `docs/sprint/sprint_log_detail_contract.md`
 - **成果物:**
   - `frontend/src/app/logs/[id]/page.tsx`（ログ詳細・編集・削除）
   - `frontend/src/app/logs/new/page.tsx`（ログ作成）
@@ -133,6 +133,34 @@
   - `DELETE /logs/{id}` → 確認ダイアログ → ログ一覧へリダイレクト
   - `POST /logs` → 作成成功後ログ一覧へリダイレクト
   - **W-03 引き継ぎ**: PATCH後に `updated_at` が変化することをPlaywrightで検証
+
+---
+
+### Sprint Fix — バグ修正・環境整備 [ ]
+
+- **エージェント:** なし（手動修正）
+- **読み込むファイル:**
+  - `docs/sprint/sprint_fix_contract.md`
+  - `docs/local/memo.md`（画面操作確認メモ）
+- **成果物:**
+  - `frontend/Dockerfile`（npm ci → npm install）
+  - `docker-compose.yml`（seed サービス追加）
+  - `backend/seed.py` + `backend/fixtures/seed_data.json`
+  - `frontend/src/components/logs/LogForm.tsx`（Zod v4 対応）
+  - `frontend/src/components/common/AppSidebar.tsx`（asChild 削除・タイトル修正）
+  - `frontend/src/components/common/ThemeToggle.tsx`（2ボタン化・hydration 修正・余白修正）
+  - `frontend/src/app/layout.tsx`（タイトル修正）
+  - `docs/design/frontend_layout.md`（タイトル修正）
+  - 時系列チャート Hour 表示改善・ログ一覧ホバー改善
+- **内容:**
+  - Docker ビルドエラーの解消（Linux 向けオプション依存関係）
+  - 固定シードスクリプトによるテストデータ自動投入（101件・べき等）
+  - Zod v4 API 変更への対応
+  - shadcn/ui `@base-ui/react` 移行に伴う `asChild` エラー解消
+  - ThemeToggle UX 改善（2ボタン・ハイライト・hydration 修正）
+  - タイトル「Log Monitor」→「LogLens」/「Log Lens」統一
+  - 時系列チャート Hour 表示の見づらさ改善
+  - ログ一覧ホバー時の視認性改善
 
 ---
 

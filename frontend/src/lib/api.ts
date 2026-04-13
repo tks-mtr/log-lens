@@ -157,6 +157,12 @@ export async function getAnalyticsTimeseries(
   return handleResponse<AnalyticsTimeseriesResponse>(response)
 }
 
+/** GET /logs/sources — DB に存在する source 名の一覧を重複なし・昇順で取得 */
+export async function getSources(): Promise<string[]> {
+  const response = await fetch(`${BASE_URL}/logs/sources`)
+  return handleResponse<string[]>(response)
+}
+
 /**
  * GET /logs/export/csv — CSV エクスポート URL 生成。
  * ブラウザ側でダウンロードリンクとして使用するため URL 文字列を返す。

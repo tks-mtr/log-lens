@@ -32,6 +32,13 @@ class LogRepository:
         return log
 
     @staticmethod
+    async def get_sources(session: AsyncSession) -> list[str]:
+        result = await session.execute(
+            select(Log.source).distinct().order_by(Log.source)
+        )
+        return list(result.scalars().all())
+
+    @staticmethod
     async def get_by_id(session: AsyncSession, log_id: int) -> Log | None:
         result = await session.execute(select(Log).where(Log.id == log_id))
         return result.scalar_one_or_none()

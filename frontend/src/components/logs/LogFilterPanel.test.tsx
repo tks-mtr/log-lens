@@ -2,6 +2,10 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { LogFilterPanel } from './LogFilterPanel'
 
+vi.mock('@/hooks/useSources', () => ({
+  useSources: () => ({ data: ['api-gateway', 'auth-service'] }),
+}))
+
 describe('LogFilterPanel', () => {
   // V-07: 正常系 — フィルタ変更後に Apply 押下で onApply コールバックが現在の入力値を引数として呼ばれる
   it('calls_onApply_with_current_filter_values_when_apply_is_clicked', () => {

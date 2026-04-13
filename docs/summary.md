@@ -4,6 +4,102 @@
 
 ---
 
+## 2026-04-13 | ThemeToggle・AppSidebar UI 修正
+
+### 実施した作業
+
+#### ThemeToggle リデザイン
+- 単一アイコントグルから Light / Dark の2ボタン並列レイアウトに変更
+- アクティブボタンを `bg-primary text-primary-foreground` でハイライト表示
+- `mounted` + `useEffect` ガードを追加し hydration mismatch を解消
+- コンテナを `flex w-fit items-center rounded-md border overflow-hidden` に変更し、Dark ボタン右側の余白を解消
+
+#### AppSidebar 修正
+- `SidebarMenuButton` の `asChild` prop を削除（`@base-ui/react` 非対応による DOM エラー解消）
+- `Link` を `SidebarMenuButton` の外側に移動してナビゲーションを維持
+- サイドバータイトルを「Log Monitor」→「LogLens」に修正
+
+### 設計上の意思決定
+
+- **`asChild` 非対応**: 最新 shadcn/ui が内部で `@base-ui/react` を使用しており Radix UI の `asChild` パターンが動作しない。`Link > SidebarMenuButton` の構造で代替
+- **ThemeToggle の2ボタン方式**: 「押してモードが切り替わる」という直感的ではない UX を解消するため、現在選択中のモードを明示的にハイライト表示
+- **git fixup**: UI 修正2件（ThemeToggle・AppSidebar）を Sprint 2 コミットに `--fixup` + `--autosquash` で取り込み
+
+### Docker・環境整備
+
+- **`npm ci` → `npm install`**: macOS 生成の `package-lock.json` に Linux 向けオプション依存（`@rolldown/binding-wasm32-wasi` 等）が含まれず `npm ci` が失敗するため変更
+- **シードスクリプト追加**: `backend/fixtures/seed_data.json`（101件・固定データ）+ `backend/seed.py`（べき等・標準ライブラリのみ）+ `docker-compose.yml` に `seed` サービスを追加。初回起動時に自動投入、2回目以降はスキップ
+- **Zod v4 対応**: `LogForm.tsx` の `z.enum` 第2引数 `errorMap` → `error` に変更・`as const` 追加（`npm run build` の TypeScript エラー解消）
+
+### Sprint Fix 計画策定
+
+- **`docs/sprint/sprint_fix_contract.md`** を新規作成（E-01〜E-04・C-01〜C-03・U-01〜U-12 の修正項目を管理）
+- **`docs/design/frontend_plan.md`** に Sprint Fix ステップを追加
+- **Source コンボボックス化の方針**: `GET /api/v1/logs/sources` 新設エンドポイントから候補取得（analytics/summary 流用より責務が明確）
+- **`feature/frontend` ブランチを初回 push**
+
+---
+
+## 2026-04-12 | Phase 4 Sprint 2・3 実装完了
+
+### 実施した作業
+
+#### Sprint 2 — フロントエンド初期設定
+- Next.js + TypeScript + Tailwind + shadcn/ui のセットアップ
+- `frontend/src/types/log.ts`（型定義 8種）・`frontend/src/lib/api.ts`（API クライアント 8関数）実装
+- 共通レイアウト（AppSidebar・ThemeToggle・ThemeProvider）実装
+- Vitest 設定・Playwright 設定・Dockerfile・docker-compose.yml frontend サービス追加
+- Vitest: 20件 PASS
+
+#### Sprint 3 — ダッシュボード
+- SummaryCard / TimeseriesChart / Histogram / FilterPanel / useAnalytics 実装
+- ダッシュボードページ（`app/page.tsx`）— ローディング・エラー表示対応
+- Vitest: 47件 PASS / Playwright E2E: 10件 PASS（E-01〜E-10）
+
+### 動作確認（2026-04-12 時点）
+
+```bash
+cd frontend
+npm run test -- --run        # Vitest 47件 PASS
+npx playwright test tests/e2e/dashboard.spec.ts  # Playwright 10件 PASS
+```
+
+### 設計上の意思決定
+
+- **`frontend/.gitignore` をルートに統合**: `frontend/.git` 削除に伴い、`frontend/` プレフィックス付きでルート `.gitignore` に移管。`playwright-report/` / `test-results/` も追加
+- **Recharts の Vitest モック**: JSDOM 環境でのレンダリング失敗を `vi.mock('recharts', ...)` で回避
+- **`docs/harness/` → `docs/sprint/` リネーム**: ディレクトリ名をより直感的に変更。参照ファイルも更新済み（PR直前コミットに含める）
+
+---
+
+## 2026-04-12 | Phase 4 Sprint 1 フロントエンドレイアウト設計完了
+
+### 実施した作業
+
+#### Phase 4 Sprint 1 — フロントエンドレイアウト設計（`feature/frontend`）
+- `docs/design/frontend_plan.md` を新規作成（Sprint 1〜5 の作業ステップ・成果物・完了条件を定義）
+- `docs/rayout/` 配下に参照画像（sidebar.png / dashboard.png / log_list.png）を格納
+- `docs/design/frontend_layout.md` を新規作成（ページ別レイアウト設計・shadcn/ui コンポーネント一覧）
+
+### 設計内容（frontend_layout.md）
+
+| ページ | 主な設計決定 |
+|--------|------------|
+| 共通レイアウト | next-themes でライト/ダーク切替。ThemeToggle をサイドバータイトル直下に配置 |
+| ダッシュボード（`/`） | INFO/WARNING/ERROR/CRITICAL の4枚サマリーカード。LineChart（時系列）＋ 積み上げ BarChart（source×severity）。source フィルタは完全一致 |
+| ログ一覧（`/logs`） | id/timestamp↕/severity↕/source↕/message 列＋ Edit ボタン列。検索バー＋フィルタバー（source=部分一致）。CSV エクスポート・新規作成ボタン。ページネーション（デフォルト50件） |
+| ログ詳細（`/logs/[id]`） | インライン編集（モーダルなし）。削除時は AlertDialog で確認 |
+| ログ作成（`/logs/new`） | React Hook Form + Zod バリデーション。作成成功後 `/logs` へリダイレクト |
+
+### 設計上の意思決定
+
+- **Sprint 構成を 1〜5 に統一**: Sprint 0 という表現を避け、レイアウト設計を Sprint 1 として全体をインクリメント
+- **Log List の Edit ボタン**: screen_flow.md には明記なしだが、一覧から直接編集へ遷移できる UX を採用
+- **Log List の検索バー**: assignment_ja.md に「検索機能必須」と明記されており専用バーを設置
+- **dashboard の source フィルタ = 完全一致、log list = 部分一致**: screen_flow.md の設計を継承（分析系と一覧系で用途が異なるため）
+
+---
+
 ## 2026-04-12 | Phase 3.5 ハーネス設計・Phase 3.6 バックエンド見直し完了
 
 ### 実施した作業
@@ -12,7 +108,7 @@
 - Anthropic Engineering 記事をもとに Planner / Generator / Evaluator の3エージェント構成を設計
 - `.claude/rules/rules_harness.md` を新規作成（エージェント詳細・起動方法・ファイルフォーマット定義）
 - `CLAUDE.md` のフェーズ表に Phase 3.5・3.6 を追加、`Claudeの役割` セクションを `@` インポート形式に変更
-- `docs/harness/` ディレクトリを新設（Sprint Contract・Feedback・Handoff の格納先）
+- `docs/sprint/` ディレクトリを新設（Sprint Contract・Feedback・Handoff の格納先）
 
 #### Phase 3.6 — バックエンド見直し（`feature/backend-review`）
 - **Planner エージェント**: 課題 PDF と `backend_plan.md` を照合し W-01〜W-07 の7件を検出・Sprint Contract 作成

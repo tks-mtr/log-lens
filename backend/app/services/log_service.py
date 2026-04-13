@@ -17,6 +17,10 @@ class LogService:
         return await LogRepository.create(session, data)
 
     @staticmethod
+    async def get_sources(session: AsyncSession) -> list[str]:
+        return await LogRepository.get_sources(session)
+
+    @staticmethod
     async def get_by_id(session: AsyncSession, log_id: int) -> Log:
         log = await LogRepository.get_by_id(session, log_id)
         if log is None:
