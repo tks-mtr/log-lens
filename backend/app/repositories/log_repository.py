@@ -6,6 +6,7 @@ from typing import Any, Literal
 from sqlalchemy import case, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.constants.severity import SEVERITY_ORDER
 from app.models.log import Log
 from app.schemas.log import LogCreate, LogUpdate
 
@@ -32,6 +33,13 @@ class LogRepository:
         return log
 
     @staticmethod
+    async def get_sources(session: AsyncSession) -> list[str]:
+        result = await session.execute(
+            select(Log.source).distinct().order_by(Log.source)
+        )
+        return list(result.scalars().all())
+
+    @staticmethod
     async def get_by_id(session: AsyncSession, log_id: int) -> Log | None:
         result = await session.execute(select(Log).where(Log.id == log_id))
         return result.scalar_one_or_none()
@@ -55,8 +63,15 @@ class LogRepository:
         count_stmt = select(func.count()).select_from(stmt.subquery())
         total: int = (await session.execute(count_stmt)).scalar_one()
 
-        sort_col = getattr(Log, sort_by)
-        stmt = stmt.order_by(sort_col.desc() if order == "desc" else sort_col.asc())
+        if sort_by == "severity":
+            rank = case(
+                *[(Log.severity == s, i) for i, s in enumerate(SEVERITY_ORDER)],
+                else_=0,
+            )
+            stmt = stmt.order_by(rank.desc() if order == "desc" else rank.asc())
+        else:
+            sort_col = getattr(Log, sort_by)
+            stmt = stmt.order_by(sort_col.desc() if order == "desc" else sort_col.asc())
         stmt = stmt.offset((page - 1) * limit).limit(limit)
 
         result = await session.execute(stmt)

@@ -342,3 +342,18 @@ class TestListForCsv:
         await LogRepository.create(session, make_log_create(source="csv-all"))
         logs = await LogRepository.list_for_csv(session)
         assert len(logs) == 1
+
+
+class TestGetSources:
+    async def test_get_sources_returns_distinct_sorted(self, session):
+        await LogRepository.create(session, make_log_create(source="z-service"))
+        await LogRepository.create(session, make_log_create(source="a-service"))
+        await LogRepository.create(session, make_log_create(source="a-service"))
+        sources = await LogRepository.get_sources(session)
+        assert "a-service" in sources
+        assert "z-service" in sources
+        assert sources == sorted(set(sources))
+
+    async def test_get_sources_returns_empty_when_no_logs(self, session):
+        sources = await LogRepository.get_sources(session)
+        assert sources == []

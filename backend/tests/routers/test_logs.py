@@ -372,3 +372,30 @@ class TestExportCsv:
         assert len(lines) == 2  # ヘッダー + 1件のみ
         assert "ERROR" in lines[1]
         assert "INFO" not in lines[1]
+
+
+class TestGetSources:
+    async def test_get_sources_returns_list(self, client):
+        await create_log(client, source="alpha-service")
+        await create_log(client, source="beta-service")
+        await create_log(client, source="alpha-service")
+        resp = await client.get(f"{BASE}/sources")
+        assert resp.status_code == 200
+        sources = resp.json()
+        assert isinstance(sources, list)
+        assert "alpha-service" in sources
+        assert "beta-service" in sources
+
+    async def test_get_sources_returns_distinct_sorted(self, client):
+        await create_log(client, source="z-svc")
+        await create_log(client, source="a-svc")
+        await create_log(client, source="a-svc")
+        resp = await client.get(f"{BASE}/sources")
+        assert resp.status_code == 200
+        sources = resp.json()
+        assert sources == sorted(set(sources))
+
+    async def test_get_sources_returns_empty_when_no_logs(self, client):
+        resp = await client.get(f"{BASE}/sources")
+        assert resp.status_code == 200
+        assert resp.json() == []

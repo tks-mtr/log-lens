@@ -6,6 +6,17 @@ A web application for centralized management, search, and analysis of applicatio
 
 ---
 
+## Features
+
+- **Dashboard** — Real-time severity summary cards, time-series trend chart (Hour / Day / Week), and severity distribution histogram by source
+- **Log List** — Filterable, sortable, and paginated log table with CSV export
+- **Log Detail** — View, edit, and delete individual log entries
+- **Log Creation** — Create new log entries via a validated form
+- **Source Combobox** — Auto-complete source field populated from existing sources in the DB
+- **Dark / Light Mode** — System-aware theme toggle
+
+---
+
 ## Getting Started
 
 ### Prerequisites
@@ -26,12 +37,26 @@ docker-compose up --build
 ```
 
 Database migrations run automatically on startup via `alembic upgrade head`.
+On first run, the `seed` service inserts 201 fixed test records automatically (skipped on subsequent runs).
 
 | Service | URL |
 |---------|-----|
 | Backend API | http://localhost:8000 |
 | API Docs (Swagger UI) | http://localhost:8000/docs |
-| Frontend (not yet implemented) | http://localhost:3000 |
+| Frontend | http://localhost:3000 |
+
+### Local development (without Docker)
+
+To run the frontend in development mode locally:
+
+```bash
+cd frontend
+cp .env.local.example .env.local  # set NEXT_PUBLIC_API_URL if needed
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### Health check
 
@@ -79,12 +104,27 @@ pytest backend/tests/repositories/
 pytest backend/tests/routers/
 ```
 
-**Run all tests with coverage:**
+**Run all tests with coverage (144 tests):**
 
 ```bash
 docker-compose up -d db-test
 cd backend
 pytest --cov=app --cov-report=term-missing
+```
+
+### Frontend tests
+
+```bash
+cd frontend
+
+# Unit tests (Vitest) — 84 tests
+npm run test
+
+# E2E tests (Playwright) — 18 tests
+# Requires Docker services running (backend + DB) for API calls
+docker-compose up -d app db
+npx playwright test
+# Playwright auto-starts the frontend dev server via webServer config
 ```
 
 ---
@@ -101,6 +141,7 @@ pytest --cov=app --cov-report=term-missing
 | GET | `/api/v1/logs/analytics/summary` | Severity summary and source histogram |
 | GET | `/api/v1/logs/analytics/timeseries` | Time-series aggregation by interval |
 | GET | `/api/v1/logs/export/csv` | Export logs as UTF-8 BOM CSV |
+| GET | `/api/v1/logs/sources` | List distinct source names (sorted) |
 
 ---
 
@@ -191,6 +232,26 @@ GitHub renders Mermaid diagrams natively, so no extension is needed when viewing
 
 ---
 
+## AI-Driven Development
+
+This project was built entirely through AI-driven development using [Claude Code](https://claude.ai/code). The development process itself was treated as an engineering challenge: designing the harness that guides the AI, not just the application.
+
+### Harness Design: Planner / Generator / Evaluator
+
+Inspired by [Anthropic's harness design principles](https://www.anthropic.com/engineering/harness-design-long-running-apps), each sprint was executed by three specialized sub-agents orchestrated via Claude Code's `Agent` tool:
+
+```
+Main Claude (Orchestrator)
+  │
+  ├─ Planner   — Reads requirements + sprint plan → creates Sprint Contract
+  ├─ Generator — Implements features + writes tests based on the contract
+  └─ Evaluator — Reviews tests → runs pytest / Vitest / Playwright → feeds back
+```
+
+The Generator ↔ Evaluator loop repeats per sprint until all acceptance criteria pass. Sprint Contracts (`docs/sprint/`), structured rule files (`.claude/rules/`), custom slash command skills (`/summary`, `/add_memo`), and project-wide instructions (`CLAUDE.md`) were also defined to keep AI behavior consistent across sessions.
+
+---
+
 ## Future Improvements
 
 The following features were out of scope for this submission but are worth pursuing:
@@ -198,4 +259,5 @@ The following features were out of scope for this submission but are worth pursu
 - **Authentication & Authorization**: JWT-based role separation between Admin and General Users
 - **Retention Policy**: Automatic deletion of logs older than a configurable period
 - **Real-time Updates**: WebSocket-based push notifications (currently replaced by a manual refresh button)
-- **Frontend Implementation**: Next.js dashboard with filters, charts, and CSV export UI
+- **Authentication & Authorization (frontend)**: Route protection and role-based UI
+- **LLM Debate for Value Judgement**: Multiple LLMs analyze log data from different perspectives and debate to surface anomaly patterns or root cause candidates that a single model might miss

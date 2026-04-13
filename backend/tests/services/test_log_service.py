@@ -321,3 +321,14 @@ class TestListForCsv:
             )
 
         assert result == []
+
+
+class TestGetSources:
+    async def test_get_sources_delegates_to_repository(self):
+        session = AsyncMock()
+        expected = ["a-service", "b-service"]
+
+        with patch.object(LogRepository, "get_sources", new=AsyncMock(return_value=expected)):
+            result = await LogService.get_sources(session)
+
+        assert result == expected

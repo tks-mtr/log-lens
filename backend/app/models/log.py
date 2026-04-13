@@ -3,6 +3,7 @@ from datetime import datetime
 from sqlalchemy import CheckConstraint, DateTime, Index, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
 
+from app.constants.severity import SEVERITY_ORDER
 from app.core.database import Base
 
 
@@ -23,7 +24,7 @@ class Log(Base):
 
     __table_args__ = (
         CheckConstraint(
-            "severity IN ('INFO', 'WARNING', 'ERROR', 'CRITICAL')",
+            f"severity IN ({', '.join(repr(s) for s in SEVERITY_ORDER)})",
             name="logs_severity_check",
         ),
         Index("ix_logs_timestamp", "timestamp"),

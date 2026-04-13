@@ -1,0 +1,1 @@
+SEVERITY_ORDER: list[str] = ["INFO", "WARNING", "ERROR", "CRITICAL"]

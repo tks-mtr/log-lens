@@ -98,6 +98,13 @@ async def export_csv(
     )
 
 
+@router.get("/sources", response_model=list[str])
+async def get_sources(
+    session: AsyncSession = Depends(get_session),
+) -> list[str]:
+    return await LogService.get_sources(session)
+
+
 # ─── CRUD ──────────────────────────────────────────────────────────────────────
 
 @router.get("", response_model=LogListResponse)

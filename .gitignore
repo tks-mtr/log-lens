@@ -16,3 +16,20 @@ backend/**/__pycache__/
 backend/**/*.pyc
 .coverage
 backend/.coverage
+
+# Frontend (Next.js)
+frontend/node_modules/
+frontend/.next/
+frontend/coverage/
+frontend/out/
+frontend/build/
+frontend/.env*.local
+frontend/*.tsbuildinfo
+frontend/next-env.d.ts
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.pnpm-debug.log*
+frontend/.vercel
+frontend/playwright-report/
+frontend/test-results/

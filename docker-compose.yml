@@ -38,3 +38,24 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
+  seed:
+    build: ./backend
+    command: python seed.py
+    environment:
+      - API_BASE_URL=http://app:8000
+    depends_on:
+      - app
+    restart: "no"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      # W-04: ブラウザ側からは localhost:8000 でアクセスするため NEXT_PUBLIC_API_URL は localhost を使用
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+    depends_on:
+      - app
