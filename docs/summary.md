@@ -38,6 +38,42 @@
 
 ---
 
+## 2026-04-14 | ビルド・テスト修正・README 更新（feature/fix-tests-and-docs）
+
+### 実施した作業
+
+#### TypeScript ビルドエラー修正
+- `chartUtils.tsx` の `SEVERITY_ORDER.indexOf()` に `string` 型を渡せない TS エラーを修正
+- `as const` タプルを `(SEVERITY_ORDER as readonly string[])` にキャストして解決
+
+#### pytest 設定修正
+- `backend/pyproject.toml` に `pythonpath = ["."]` を追加（`ModuleNotFoundError: No module named 'app'` 解消）
+- `TEST_DATABASE_URL` を追加（`localhost:5433` → `db-test` コンテナの正しい接続先）
+
+#### Playwright E2E テスト修正（17件 → 36件 PASS）
+- `**/api/v1/logs**` のルートモックが `/logs/sources` もインターセプトし `sources.map is not a function` でページクラッシュしていた問題を修正。全スペックの passthrough 条件に `/sources` を追加
+- `LogForm` の source フィールドを `<select>` → `<input type="text" list="...">` + `<datalist>` に変更（テストが `fill()` を期待しているのに `<select>` だったため）
+- `LogForm.test.tsx` の `selectOptions` → `user.type` に修正
+- サイドバーのアクティブクラス確認を `<a>` → `<a> > button` に変更（`bg-accent` は内側の `SidebarMenuButton` に付く）
+
+#### README 更新
+- ペルソナセクションに各ペルソナのユースケースフロー（3行）を追記
+- 開発方針セクションを新設し TDD で実装した旨を記載
+- `docker-compose` → `docker compose` 表記を統一（ja・en 両方）
+
+### 設計上の意思決定
+
+- **source フィールドの `<select>` → `<input>` 変更**: `LogFilterPanel` と一貫させ、既存 source 以外（新規 source 名）も自由入力できるよう変更。E2E テストの `fill()` 呼び出しと整合性が取れた
+- **`/sources` passthrough**: バックエンドが起動している前提で `/sources` は実 API に通すことで、ソースリストを実データから取得する E2E テストの設計意図を維持
+
+### 動作確認
+
+- Vitest: 84件 PASS
+- Playwright: 36件 PASS（全件グリーン）
+- Docker: `docker compose build frontend` 成功（TypeScript エラー解消確認）
+
+---
+
 ## 2026-04-13 | ThemeToggle・AppSidebar UI 修正
 
 ### 実施した作業

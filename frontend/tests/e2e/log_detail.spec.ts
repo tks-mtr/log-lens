@@ -37,7 +37,7 @@ async function setupLogsListMock(page: Parameters<Parameters<typeof test>[1]>[0]
   // 一覧エンドポイント（/logs の直接 GET）のみモック。/logs/数字 は除外
   await page.route(/\/api\/v1\/logs(\?.*)?$/, (route) => {
     const url = route.request().url()
-    if (url.includes('/analytics') || url.includes('/export')) {
+    if (url.includes('/analytics') || url.includes('/export') || url.includes('/sources')) {
       route.continue()
       return
     }
