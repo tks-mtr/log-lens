@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
 
 // --- Mock data ---
 
@@ -20,7 +20,7 @@ const MOCK_LOG_UPDATED = {
 
 /** GET /api/v1/logs/42 のモックをセットアップ */
 async function setupLogDetailMock(
-  page: Parameters<Parameters<typeof test>[1]>[0],
+  page: Page,
   logData = MOCK_LOG
 ) {
   await page.route(`**/api/v1/logs/${logData.id}`, (route) => {
@@ -33,7 +33,7 @@ async function setupLogDetailMock(
 }
 
 /** GET /api/v1/logs（一覧）のモックをセットアップ。詳細エンドポイントは除外 */
-async function setupLogsListMock(page: Parameters<Parameters<typeof test>[1]>[0]) {
+async function setupLogsListMock(page: Page) {
   // 一覧エンドポイント（/logs の直接 GET）のみモック。/logs/数字 は除外
   await page.route(/\/api\/v1\/logs(\?.*)?$/, (route) => {
     const url = route.request().url()

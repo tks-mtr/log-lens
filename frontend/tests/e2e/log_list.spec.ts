@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
 
 // --- Mock API data ---
 
@@ -48,7 +48,7 @@ const MOCK_RESPONSE_ERROR_ONLY = {
 
 /** /logs の GET /api/v1/logs をモックするセットアップ */
 async function setupLogsMock(
-  page: Parameters<Parameters<typeof test>[1]>[0],
+  page: Page,
   response = MOCK_RESPONSE_PAGE1
 ) {
   await page.route('**/api/v1/logs**', (route) => {
