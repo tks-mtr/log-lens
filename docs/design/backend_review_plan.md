@@ -19,7 +19,7 @@
 - **読み込むファイル:**
   - `docs/issues/Seniorlead_full_stack_engineer_assignment_(Logs_Dashboard).pdf`
   - `docs/design/backend_plan.md`
-- **成果物:** `docs/harness/sprint_backend_review_contract.md`
+- **成果物:** `docs/sprint/sprint_backend_review_contract.md`
 - **内容:**
   - 課題PDFの要件・制約・評価基準とバックエンド実装を照合する
   - 抜け漏れ・未実装項目があれば Sprint Contract に警告として記載する
@@ -31,7 +31,7 @@
 
 - **エージェント:** Generator
 - **読み込むファイル:**
-  - `docs/harness/sprint_backend_review_contract.md`
+  - `docs/sprint/sprint_backend_review_contract.md`
 - **成果物:** 修正済みコード・テスト
 - **内容:**
   - Sprint Contract の指摘事項をもとにコードを修正する
@@ -45,7 +45,7 @@
 
 - **エージェント:** Evaluator
 - **読み込むファイル:**
-  - `docs/harness/sprint_backend_review_contract.md`
+  - `docs/sprint/sprint_backend_review_contract.md`
   - `.claude/rules/rules_test.md`
 - **成果物:** テスト結果レポート（Sprint Contract 内に記録）
 - **内容:**

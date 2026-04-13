@@ -23,7 +23,6 @@
 
 - **`asChild` 非対応**: 最新 shadcn/ui が内部で `@base-ui/react` を使用しており Radix UI の `asChild` パターンが動作しない。`Link > SidebarMenuButton` の構造で代替
 - **ThemeToggle の2ボタン方式**: 「押してモードが切り替わる」という直感的ではない UX を解消するため、現在選択中のモードを明示的にハイライト表示
-- **git fixup**: UI 修正2件（ThemeToggle・AppSidebar）を Sprint 2 コミットに `--fixup` + `--autosquash` で取り込み
 
 ### Docker・環境整備
 
@@ -33,10 +32,66 @@
 
 ### Sprint Fix 計画策定
 
-- **`docs/sprint/sprint_fix_contract.md`** を新規作成（E-01〜E-04・C-01〜C-03・U-01〜U-12 の修正項目を管理）
+- **`docs/sprint/sprint_fix_contract.md`** を新規作成（E-01〜E-04・C-01〜C-03・U-01〜U-13 の修正項目を管理）
 - **`docs/design/frontend_plan.md`** に Sprint Fix ステップを追加
 - **Source コンボボックス化の方針**: `GET /api/v1/logs/sources` 新設エンドポイントから候補取得（analytics/summary 流用より責務が明確）
 - **`feature/frontend` ブランチを初回 push**
+
+### Sprint Fix 実装完了
+
+#### バックエンド追加（B-01・B-02）
+- `GET /api/v1/logs/sources` — distinct・昇順で source 一覧を返すエンドポイントを追加（Repository / Service / Router / テスト 各3件）
+- `getSources()` を `api.ts` に追加、`useSources` TanStack Query フック（staleTime 5分）を新規作成
+
+#### UI/UX 修正（U-04〜U-13）
+- **U-04**: ログ一覧フィルター Severity 選択時のレイアウト崩れ修正（「All Severities」スパン削除）
+- **U-05**: ログ一覧フィルター Source をコンボボックス化（datalist + 自由入力）
+- **U-06**: Tooltip ダークモード対応（CSS 変数 `--card`/`--border`/`--card-foreground` を inline style で指定）
+- **U-07**: Y 軸 `allowDecimals={false}` 設定（TimeseriesChart・Histogram）
+- **U-08**: Legend を2行カスタムレイアウト（上段 CRITICAL/ERROR・下段 INFO/WARNING）に変更
+- **U-09**: Histogram X 軸に `StaggeredTick`（奇数インデックスを14px下げ）実装し2段表示
+- **U-10**: interval 切替時の不要ちらつき解消（`isLoading` を `summaryLoading`/`timeseriesLoading` に分離）
+- **U-11**: LogDetail message に `min-w-0` 追加（CSS Grid 内で `break-words` が正しく機能するよう修正）
+- **U-12**: Dashboard FilterPanel Source をコンボボックス化（`useSources` + datalist）
+- **U-13**: LogForm Source をセレクトボックス化（既存 source のみ選択可・編集時は現在値を先頭追加）
+
+#### シードデータ更新
+- 101件 → 201件に拡張、severity に時系列的偏りを付与（INFO 均一・WARNING 中盤増加・ERROR/CRITICAL は day18〜19 のインシデント集中）
+
+### 設計上の意思決定（Sprint Fix）
+
+- **LogForm Source はセレクトボックス**: フリーテキスト入力を許容するとユーザーが任意の source 名を作成できてしまうため、既存 source のみに制限。フィルターパネルは部分一致検索が目的のためコンボボックスを維持
+- **`min-w-0` の必要性**: CSS Grid の `1fr` カラムは `min-width: auto` がデフォルトのため、`break-words` だけでは効かない。`min-w-0` で最小幅を 0 にすることで初めて機能する
+
+---
+
+## 2026-04-13 | Phase 4 Sprint 4・5 実装完了
+
+### 実施した作業
+
+#### Sprint 4 — ログ一覧
+- `frontend/src/app/logs/page.tsx` — フィルタ・ソート・ページネーション付きログ一覧ページ実装
+- `LogTable.tsx` / `LogFilterPanel.tsx` / `Pagination.tsx` / `useLogs.ts` 実装（各テスト付き）
+- CSV エクスポートボタン（`<a download>` 方式）、行クリックで詳細画面へ遷移
+- Playwright E2E: `tests/e2e/log_list.spec.ts`
+
+#### Sprint 5 — ログ詳細・編集・作成
+- `frontend/src/app/logs/[id]/page.tsx` — ログ詳細・インライン編集・削除ダイアログ実装
+- `frontend/src/app/logs/new/page.tsx` — ログ新規作成ページ実装
+- `LogForm.tsx`（React Hook Form + Zod）・`DeleteDialog.tsx` 実装（各テスト付き）
+- Playwright E2E: `tests/e2e/log_detail.spec.ts` / `tests/e2e/log_create.spec.ts`
+
+### 動作確認（Sprint 4・5 完了時点）
+
+- Vitest: 84件 PASS
+- Playwright E2E: 10件 PASS（dashboard）
+
+### 設計上の意思決定
+
+- **timestamp の `datetime-local` 入力**: HTML の `datetime-local` は秒を含まない形式のため、バックエンドへの送信前にそのまま渡す。空文字の場合はキーごと除外（W-04）
+- **削除後のリダイレクト**: `router.push('/logs')` で一覧へ戻る。`queryClient.invalidateQueries` で一覧キャッシュを無効化
+- **楽観的更新なし**: 編集後は `invalidateQueries` で最新データを再取得。シンプルさを優先（W-05）
+- **LogForm を新規作成・編集で共用**: `defaultValues` の有無で動作を切り替え。`submitLabel` prop で「Save」「Create」を切り替え
 
 ---
 

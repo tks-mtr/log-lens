@@ -33,7 +33,7 @@
 
 ## 作業ステップ
 
-### Sprint 1 — レイアウト設計 [ ]
+### Sprint 1 — レイアウト設計 [x]
 
 - **エージェント:** なし（設計のみ・コード不要）
 - **成果物:** `docs/design/frontend_layout.md`
@@ -48,7 +48,7 @@
 
 ---
 
-### Sprint 2 — プロジェクト初期設定 [ ]
+### Sprint 2 — プロジェクト初期設定 [x]
 
 - **エージェント:** Generator → Evaluator
 - **読み込むファイル:**
@@ -74,7 +74,7 @@
 
 ---
 
-### Sprint 3 — ダッシュボード [ ]
+### Sprint 3 — ダッシュボード [x]
 
 - **エージェント:** Planner → Generator → Evaluator
 - **読み込むファイル:**
@@ -95,7 +95,7 @@
 
 ---
 
-### Sprint 4 — ログ一覧 [ ]
+### Sprint 4 — ログ一覧 [x]
 
 - **エージェント:** Planner → Generator → Evaluator
 - **読み込むファイル:**
@@ -115,7 +115,7 @@
 
 ---
 
-### Sprint 5 — ログ詳細・編集・作成 [ ]
+### Sprint 5 — ログ詳細・編集・作成 [x]
 
 - **エージェント:** Planner → Generator → Evaluator
 - **読み込むファイル:**
@@ -136,7 +136,7 @@
 
 ---
 
-### Sprint Fix — バグ修正・環境整備 [ ]
+### Sprint Fix — バグ修正・環境整備 [x]
 
 - **エージェント:** なし（手動修正）
 - **読み込むファイル:**
@@ -166,7 +166,7 @@
 
 ## 完了条件
 
-- [ ] Sprint 1〜5 の全ステップ完了
-- [ ] Vitest 全件グリーン
-- [ ] Playwright 全件グリーン
+- [x] Sprint 1〜5 の全ステップ完了
+- [x] Vitest 全件グリーン（84件）
+- [x] Playwright 全件グリーン（10件）
 - [ ] PR直前コミット（CLAUDE.md / README.md / README.ja.md / docs/summary.md / 本ファイル）完了

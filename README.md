@@ -26,12 +26,26 @@ docker-compose up --build
 ```
 
 Database migrations run automatically on startup via `alembic upgrade head`.
+On first run, the `seed` service inserts 201 fixed test records automatically (skipped on subsequent runs).
 
 | Service | URL |
 |---------|-----|
 | Backend API | http://localhost:8000 |
 | API Docs (Swagger UI) | http://localhost:8000/docs |
-| Frontend (not yet implemented) | http://localhost:3000 |
+| Frontend | http://localhost:3000 |
+
+### Local development (without Docker)
+
+To run the frontend in development mode locally:
+
+```bash
+cd frontend
+cp .env.local.example .env.local  # set NEXT_PUBLIC_API_URL if needed
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### Health check
 
@@ -87,6 +101,19 @@ cd backend
 pytest --cov=app --cov-report=term-missing
 ```
 
+### Frontend tests
+
+```bash
+cd frontend
+
+# Unit tests (Vitest)
+npm run test
+
+# E2E tests (Playwright) — requires the dev server running
+npm run dev &
+npx playwright test
+```
+
 ---
 
 ## API Overview
@@ -101,6 +128,7 @@ pytest --cov=app --cov-report=term-missing
 | GET | `/api/v1/logs/analytics/summary` | Severity summary and source histogram |
 | GET | `/api/v1/logs/analytics/timeseries` | Time-series aggregation by interval |
 | GET | `/api/v1/logs/export/csv` | Export logs as UTF-8 BOM CSV |
+| GET | `/api/v1/logs/sources` | List distinct source names (sorted) |
 
 ---
 
@@ -198,4 +226,4 @@ The following features were out of scope for this submission but are worth pursu
 - **Authentication & Authorization**: JWT-based role separation between Admin and General Users
 - **Retention Policy**: Automatic deletion of logs older than a configurable period
 - **Real-time Updates**: WebSocket-based push notifications (currently replaced by a manual refresh button)
-- **Frontend Implementation**: Next.js dashboard with filters, charts, and CSV export UI
+- **Authentication & Authorization (frontend)**: Route protection and role-based UI
