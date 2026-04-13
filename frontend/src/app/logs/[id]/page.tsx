@@ -180,7 +180,7 @@ export default function LogDetailPage() {
             <dd data-testid="log-detail-source">{log.source}</dd>
 
             <dt className="font-medium text-muted-foreground">message</dt>
-            <dd data-testid="log-detail-message" className="whitespace-pre-wrap break-words">
+            <dd data-testid="log-detail-message" className="whitespace-pre-wrap break-words min-w-0">
               {log.message}
             </dd>
 
