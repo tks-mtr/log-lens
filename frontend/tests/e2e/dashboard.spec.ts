@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
 
 // --- Mock API data ---
 const MOCK_SUMMARY = {
@@ -34,7 +34,7 @@ const MOCK_TIMESERIES_AFTER_FILTER = {
 
 /** バックエンドを起動せず API をモックするセットアップ */
 async function setupApiMocks(
-  page: Parameters<Parameters<typeof test>[1]>[0],
+  page: Page,
   summaryData = MOCK_SUMMARY
 ) {
   await page.route('**/api/v1/logs/analytics/summary**', (route) => {
@@ -220,11 +220,14 @@ test('E-08: selecting_error_severity_filter_passes_to_api', async ({ page }) => 
 
   // ERROR のみ選択
   await page.getByRole('button', { name: 'ERROR' }).click()
-  await page.getByTestId('filter-apply').click()
 
-  // API が呼ばれるまで待つ
-  await page.waitForResponse('**/api/v1/logs/analytics/summary**')
+  // waitForResponse はクリック前にセットアップして取りこぼしを防ぐ
+  const [response] = await Promise.all([
+    page.waitForResponse('**/api/v1/logs/analytics/summary**'),
+    page.getByTestId('filter-apply').click(),
+  ])
 
+  expect(response.status()).toBe(200)
   // フィルタが API に渡されていることを確認
   expect(lastSummaryUrl).toContain('severity=ERROR')
 })
