@@ -53,12 +53,6 @@ describe('FilterPanel', () => {
     })
   })
 
-  // 追加: Severity のデフォルト表示が "All Severities" であることを確認 (C-08)
-  it('displays_all_severities_default_text_when_no_severity_selected', () => {
-    render(<FilterPanel onApply={vi.fn()} />)
-    expect(screen.getByText('All Severities')).toBeInTheDocument()
-  })
-
   // 追加: Source プレースホルダーが "exact match" であることを確認 (C-09)
   it('has_exact_match_placeholder_for_source_input', () => {
     render(<FilterPanel onApply={vi.fn()} />)

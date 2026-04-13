@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Log Monitor',
+  title: 'Log Lens',
   description: 'Log monitoring dashboard',
 }
 

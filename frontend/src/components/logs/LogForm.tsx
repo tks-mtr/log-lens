@@ -12,8 +12,8 @@ const SEVERITIES: Severity[] = ['INFO', 'WARNING', 'ERROR', 'CRITICAL']
 // W-04: timestamp は省略可。空文字は許容する（送信時にキーから除外）
 const logFormSchema = z.object({
   timestamp: z.string().optional(),
-  severity: z.enum(['INFO', 'WARNING', 'ERROR', 'CRITICAL'], {
-    errorMap: () => ({ message: 'Severity is required' }),
+  severity: z.enum(['INFO', 'WARNING', 'ERROR', 'CRITICAL'] as const, {
+    error: 'Severity is required',
   }),
   source: z.string().min(1, 'Source is required'),
   message: z.string().min(1, 'Message is required'),

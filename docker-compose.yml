@@ -39,6 +39,15 @@ services:
       timeout: 5s
       retries: 5
 
+  seed:
+    build: ./backend
+    command: python seed.py
+    environment:
+      - API_BASE_URL=http://app:8000
+    depends_on:
+      - app
+    restart: "no"
+
   frontend:
     build:
       context: ./frontend

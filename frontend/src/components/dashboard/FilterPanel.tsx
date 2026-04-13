@@ -59,9 +59,6 @@ export function FilterPanel({ onApply }: FilterPanelProps) {
       <div className="flex flex-col gap-1">
         <label className="text-xs text-muted-foreground">Severity</label>
         <div className="flex gap-1 flex-wrap" data-testid="filter-severity">
-          <span className="text-xs text-muted-foreground self-center mr-1">
-            {selectedSeverities.length === 0 ? 'All Severities' : ''}
-          </span>
           {SEVERITIES.map((sev) => (
             <button
               key={sev}

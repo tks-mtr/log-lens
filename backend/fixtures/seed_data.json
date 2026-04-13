@@ -1,0 +1,608 @@
+[
+  {
+    "severity": "INFO",
+    "source": "notification-service",
+    "message": "Background job completed",
+    "timestamp": "2026-03-14T12:37:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "auth-service",
+    "message": "Background job completed",
+    "timestamp": "2026-03-16T12:09:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "api-gateway",
+    "message": "Rate limit approaching threshold",
+    "timestamp": "2026-03-17T03:16:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "auth-service",
+    "message": "Background job completed",
+    "timestamp": "2026-03-17T13:37:00+00:00"
+  },
+  {
+    "severity": "CRITICAL",
+    "source": "notification-service",
+    "message": "Database cluster unreachable",
+    "timestamp": "2026-03-17T14:50:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "notification-service",
+    "message": "Cache refreshed",
+    "timestamp": "2026-03-17T17:23:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "user-service",
+    "message": "Password changed successfully",
+    "timestamp": "2026-03-17T22:20:00+00:00"
+  },
+  {
+    "severity": "ERROR",
+    "source": "auth-service",
+    "message": "File not found",
+    "timestamp": "2026-03-18T02:01:00+00:00"
+  },
+  {
+    "severity": "ERROR",
+    "source": "user-service",
+    "message": "File not found",
+    "timestamp": "2026-03-18T05:32:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "auth-service",
+    "message": "Request processed successfully",
+    "timestamp": "2026-03-18T15:17:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "user-service",
+    "message": "Health check passed",
+    "timestamp": "2026-03-18T16:48:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "auth-service",
+    "message": "Disk usage above 80%",
+    "timestamp": "2026-03-18T19:01:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "auth-service",
+    "message": "Disk usage above 80%",
+    "timestamp": "2026-03-18T22:56:00+00:00"
+  },
+  {
+    "severity": "ERROR",
+    "source": "auth-service",
+    "message": "Request validation error",
+    "timestamp": "2026-03-19T01:12:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "api-gateway",
+    "message": "Health check passed",
+    "timestamp": "2026-03-19T05:08:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "payment-service",
+    "message": "Certificate expiring in 7 days",
+    "timestamp": "2026-03-19T08:13:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "api-gateway",
+    "message": "Slow response time observed",
+    "timestamp": "2026-03-19T11:21:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "notification-service",
+    "message": "Certificate expiring in 7 days",
+    "timestamp": "2026-03-19T17:07:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "auth-service",
+    "message": "Password changed successfully",
+    "timestamp": "2026-03-19T18:04:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "api-gateway",
+    "message": "Disk usage above 80%",
+    "timestamp": "2026-03-20T05:21:00+00:00"
+  },
+  {
+    "severity": "ERROR",
+    "source": "payment-service",
+    "message": "Failed to process payment",
+    "timestamp": "2026-03-20T10:53:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "payment-service",
+    "message": "Request processed successfully",
+    "timestamp": "2026-03-20T12:40:00+00:00"
+  },
+  {
+    "severity": "ERROR",
+    "source": "notification-service",
+    "message": "Service unavailable",
+    "timestamp": "2026-03-20T19:05:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "user-service",
+    "message": "Slow response time observed",
+    "timestamp": "2026-03-20T21:06:00+00:00"
+  },
+  {
+    "severity": "ERROR",
+    "source": "api-gateway",
+    "message": "Permission denied",
+    "timestamp": "2026-03-21T10:56:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "payment-service",
+    "message": "Health check passed",
+    "timestamp": "2026-03-21T13:47:00+00:00"
+  },
+  {
+    "severity": "ERROR",
+    "source": "user-service",
+    "message": "Permission denied",
+    "timestamp": "2026-03-21T16:18:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "notification-service",
+    "message": "Password changed successfully",
+    "timestamp": "2026-03-21T20:27:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "notification-service",
+    "message": "Session created",
+    "timestamp": "2026-03-23T03:45:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "api-gateway",
+    "message": "Background job completed",
+    "timestamp": "2026-03-23T13:15:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "payment-service",
+    "message": "Deprecated API endpoint called",
+    "timestamp": "2026-03-23T15:42:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "payment-service",
+    "message": "Password changed successfully",
+    "timestamp": "2026-03-23T18:22:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "notification-service",
+    "message": "Disk usage above 80%",
+    "timestamp": "2026-03-24T02:26:00+00:00"
+  },
+  {
+    "severity": "CRITICAL",
+    "source": "notification-service",
+    "message": "Data corruption detected",
+    "timestamp": "2026-03-24T04:49:00+00:00"
+  },
+  {
+    "severity": "ERROR",
+    "source": "auth-service",
+    "message": "Database connection timeout",
+    "timestamp": "2026-03-24T12:32:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "user-service",
+    "message": "High memory usage detected",
+    "timestamp": "2026-03-25T04:54:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "api-gateway",
+    "message": "Config reloaded",
+    "timestamp": "2026-03-25T06:11:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "payment-service",
+    "message": "Retry attempt #2",
+    "timestamp": "2026-03-25T14:49:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "api-gateway",
+    "message": "High memory usage detected",
+    "timestamp": "2026-03-25T18:46:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "api-gateway",
+    "message": "Cache refreshed",
+    "timestamp": "2026-03-26T13:19:00+00:00"
+  },
+  {
+    "severity": "CRITICAL",
+    "source": "notification-service",
+    "message": "Disk full - writes blocked",
+    "timestamp": "2026-03-26T13:30:00+00:00"
+  },
+  {
+    "severity": "CRITICAL",
+    "source": "user-service",
+    "message": "Data corruption detected",
+    "timestamp": "2026-03-26T13:40:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "payment-service",
+    "message": "Request processed successfully",
+    "timestamp": "2026-03-26T15:26:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "user-service",
+    "message": "Cache refreshed",
+    "timestamp": "2026-03-27T04:10:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "user-service",
+    "message": "Cache refreshed",
+    "timestamp": "2026-03-27T04:14:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "user-service",
+    "message": "Slow response time observed",
+    "timestamp": "2026-03-27T20:34:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "api-gateway",
+    "message": "User login successful",
+    "timestamp": "2026-03-28T00:05:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "auth-service",
+    "message": "High memory usage detected",
+    "timestamp": "2026-03-28T18:32:00+00:00"
+  },
+  {
+    "severity": "ERROR",
+    "source": "api-gateway",
+    "message": "Authentication failed for user",
+    "timestamp": "2026-03-28T19:10:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "api-gateway",
+    "message": "Session created",
+    "timestamp": "2026-03-28T19:42:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "auth-service",
+    "message": "User login successful",
+    "timestamp": "2026-03-28T21:20:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "payment-service",
+    "message": "Slow response time observed",
+    "timestamp": "2026-03-28T21:33:00+00:00"
+  },
+  {
+    "severity": "CRITICAL",
+    "source": "auth-service",
+    "message": "Disk full - writes blocked",
+    "timestamp": "2026-03-29T21:16:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "payment-service",
+    "message": "Slow response time observed",
+    "timestamp": "2026-03-31T00:28:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "auth-service",
+    "message": "Config reloaded",
+    "timestamp": "2026-03-31T17:56:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "user-service",
+    "message": "File upload completed",
+    "timestamp": "2026-04-01T00:16:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "user-service",
+    "message": "Slow response time observed",
+    "timestamp": "2026-04-01T12:08:00+00:00"
+  },
+  {
+    "severity": "ERROR",
+    "source": "api-gateway",
+    "message": "File not found",
+    "timestamp": "2026-04-01T12:18:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "payment-service",
+    "message": "Cache refreshed",
+    "timestamp": "2026-04-01T16:15:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "auth-service",
+    "message": "Service started",
+    "timestamp": "2026-04-01T18:02:00+00:00"
+  },
+  {
+    "severity": "ERROR",
+    "source": "payment-service",
+    "message": "Permission denied",
+    "timestamp": "2026-04-01T19:46:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "user-service",
+    "message": "User login successful",
+    "timestamp": "2026-04-02T05:01:00+00:00"
+  },
+  {
+    "severity": "ERROR",
+    "source": "notification-service",
+    "message": "Database connection timeout",
+    "timestamp": "2026-04-02T17:06:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "notification-service",
+    "message": "Disk usage above 80%",
+    "timestamp": "2026-04-02T18:02:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "api-gateway",
+    "message": "Rate limit approaching threshold",
+    "timestamp": "2026-04-02T18:10:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "payment-service",
+    "message": "Deprecated API endpoint called",
+    "timestamp": "2026-04-03T02:49:00+00:00"
+  },
+  {
+    "severity": "CRITICAL",
+    "source": "auth-service",
+    "message": "Data corruption detected",
+    "timestamp": "2026-04-04T03:35:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "notification-service",
+    "message": "File upload completed",
+    "timestamp": "2026-04-04T08:34:00+00:00"
+  },
+  {
+    "severity": "CRITICAL",
+    "source": "notification-service",
+    "message": "Data corruption detected",
+    "timestamp": "2026-04-04T19:14:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "user-service",
+    "message": "Slow response time observed",
+    "timestamp": "2026-04-05T00:36:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "notification-service",
+    "message": "Slow response time observed",
+    "timestamp": "2026-04-05T03:08:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "user-service",
+    "message": "Cache refreshed",
+    "timestamp": "2026-04-05T14:26:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "auth-service",
+    "message": "Password changed successfully",
+    "timestamp": "2026-04-05T14:49:00+00:00"
+  },
+  {
+    "severity": "ERROR",
+    "source": "api-gateway",
+    "message": "Failed to process payment",
+    "timestamp": "2026-04-05T15:34:00+00:00"
+  },
+  {
+    "severity": "CRITICAL",
+    "source": "payment-service",
+    "message": "Database cluster unreachable",
+    "timestamp": "2026-04-05T17:36:00+00:00"
+  },
+  {
+    "severity": "ERROR",
+    "source": "auth-service",
+    "message": "Database connection timeout",
+    "timestamp": "2026-04-05T17:41:00+00:00"
+  },
+  {
+    "severity": "ERROR",
+    "source": "api-gateway",
+    "message": "Request validation error",
+    "timestamp": "2026-04-06T06:46:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "auth-service",
+    "message": "Service started",
+    "timestamp": "2026-04-06T14:41:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "user-service",
+    "message": "High memory usage detected",
+    "timestamp": "2026-04-07T01:19:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "api-gateway",
+    "message": "User login successful",
+    "timestamp": "2026-04-07T16:07:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "api-gateway",
+    "message": "File upload completed",
+    "timestamp": "2026-04-08T00:59:00+00:00"
+  },
+  {
+    "severity": "ERROR",
+    "source": "auth-service",
+    "message": "Database connection timeout",
+    "timestamp": "2026-04-08T02:27:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "payment-service",
+    "message": "File upload completed",
+    "timestamp": "2026-04-08T05:20:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "auth-service",
+    "message": "Disk usage above 80%",
+    "timestamp": "2026-04-08T16:16:00+00:00"
+  },
+  {
+    "severity": "ERROR",
+    "source": "api-gateway",
+    "message": "Request validation error",
+    "timestamp": "2026-04-08T17:01:00+00:00"
+  },
+  {
+    "severity": "ERROR",
+    "source": "payment-service",
+    "message": "File not found",
+    "timestamp": "2026-04-08T17:46:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "notification-service",
+    "message": "Retry attempt #2",
+    "timestamp": "2026-04-09T01:09:00+00:00"
+  },
+  {
+    "severity": "CRITICAL",
+    "source": "api-gateway",
+    "message": "Disk full - writes blocked",
+    "timestamp": "2026-04-09T10:14:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "user-service",
+    "message": "Cache refreshed",
+    "timestamp": "2026-04-09T17:22:00+00:00"
+  },
+  {
+    "severity": "ERROR",
+    "source": "notification-service",
+    "message": "Database connection timeout",
+    "timestamp": "2026-04-09T20:37:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "notification-service",
+    "message": "Password changed successfully",
+    "timestamp": "2026-04-10T01:31:00+00:00"
+  },
+  {
+    "severity": "ERROR",
+    "source": "user-service",
+    "message": "Request validation error",
+    "timestamp": "2026-04-10T02:04:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "user-service",
+    "message": "File upload completed",
+    "timestamp": "2026-04-10T02:31:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "auth-service",
+    "message": "Rate limit approaching threshold",
+    "timestamp": "2026-04-10T13:22:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "api-gateway",
+    "message": "Background job completed",
+    "timestamp": "2026-04-11T00:38:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "auth-service",
+    "message": "Cache refreshed",
+    "timestamp": "2026-04-12T05:19:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "notification-service",
+    "message": "Rate limit approaching threshold",
+    "timestamp": "2026-04-12T13:54:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "payment-service",
+    "message": "Deprecated API endpoint called",
+    "timestamp": "2026-04-12T21:03:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "payment-service",
+    "message": "Session created",
+    "timestamp": "2026-04-13T01:50:00+00:00"
+  },
+  {
+    "severity": "INFO",
+    "source": "auth-service",
+    "message": "User login successful",
+    "timestamp": "2026-04-13T05:44:00+00:00"
+  },
+  {
+    "severity": "WARNING",
+    "source": "notification-service",
+    "message": "High memory usage detected",
+    "timestamp": "2026-04-13T06:18:00+00:00"
+  }
+]
