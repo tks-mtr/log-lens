@@ -238,8 +238,8 @@ test('E-09: dashboard_link_is_active_when_on_root_path', async ({ page }) => {
   const dashboardLink = page.getByRole('link', { name: /Dashboard/i })
   await expect(dashboardLink).toBeVisible()
 
-  // isActive=true のとき AppSidebar は bg-accent クラスを付与してアクティブ表示にする
-  await expect(dashboardLink).toHaveClass(/bg-accent/)
+  // isActive=true のとき内側の SidebarMenuButton（button）に bg-accent クラスが付与される
+  await expect(dashboardLink.locator('button')).toHaveClass(/bg-accent/)
 })
 
 // E-10: サイドバーの "Log List" リンクをクリックすると `/logs` へ遷移する
@@ -248,8 +248,8 @@ test('E-10: clicking_log_list_link_navigates_to_logs_page', async ({ page }) => 
 
   // /logs ページも含めてルーティングが必要な場合はモック
   await page.route('**/api/v1/logs**', (route) => {
-    // /analytics の前にマッチしないようにチェック
-    if (route.request().url().includes('/analytics')) {
+    const url = route.request().url()
+    if (url.includes('/analytics') || url.includes('/sources')) {
       route.continue()
       return
     }

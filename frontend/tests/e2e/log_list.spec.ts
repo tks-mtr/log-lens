@@ -53,8 +53,8 @@ async function setupLogsMock(
 ) {
   await page.route('**/api/v1/logs**', (route) => {
     const url = route.request().url()
-    // analytics / export は通過させる
-    if (url.includes('/analytics') || url.includes('/export')) {
+    // analytics / export / sources は通過させる
+    if (url.includes('/analytics') || url.includes('/export') || url.includes('/sources')) {
       route.continue()
       return
     }
@@ -106,7 +106,7 @@ test('E-04: selecting_error_severity_and_applying_passes_filter_to_api', async (
 
   await page.route('**/api/v1/logs**', (route) => {
     const url = route.request().url()
-    if (url.includes('/analytics') || url.includes('/export')) {
+    if (url.includes('/analytics') || url.includes('/export') || url.includes('/sources')) {
       route.continue()
       return
     }
@@ -150,7 +150,7 @@ test('E-05: entering_source_and_applying_passes_source_param_to_api', async ({ p
 
   await page.route('**/api/v1/logs**', (route) => {
     const url = route.request().url()
-    if (url.includes('/analytics') || url.includes('/export')) {
+    if (url.includes('/analytics') || url.includes('/export') || url.includes('/sources')) {
       route.continue()
       return
     }
@@ -183,7 +183,7 @@ test('E-06: clicking_timestamp_header_changes_sort_parameters', async ({ page })
 
   await page.route('**/api/v1/logs**', (route) => {
     const url = route.request().url()
-    if (url.includes('/analytics') || url.includes('/export')) {
+    if (url.includes('/analytics') || url.includes('/export') || url.includes('/sources')) {
       route.continue()
       return
     }
@@ -219,7 +219,7 @@ test('E-07: next_button_navigates_to_page_two_when_clicked', async ({ page }) =>
 
   await page.route('**/api/v1/logs**', (route) => {
     const url = route.request().url()
-    if (url.includes('/analytics') || url.includes('/export')) {
+    if (url.includes('/analytics') || url.includes('/export') || url.includes('/sources')) {
       route.continue()
       return
     }
@@ -255,7 +255,7 @@ test('E-07: next_button_navigates_to_page_two_when_clicked', async ({ page }) =>
 test('E-08: selecting_limit_10_shows_at_most_10_rows', async ({ page }) => {
   await page.route('**/api/v1/logs**', (route) => {
     const url = route.request().url()
-    if (url.includes('/analytics') || url.includes('/export')) {
+    if (url.includes('/analytics') || url.includes('/export') || url.includes('/sources')) {
       route.continue()
       return
     }
@@ -358,6 +358,6 @@ test('E-12: log_list_sidebar_link_is_active_when_on_logs_page', async ({ page })
 
   const logListLink = page.getByRole('link', { name: /Log List/i })
   await expect(logListLink).toBeVisible()
-  // アクティブ時は bg-accent クラスが付与される
-  await expect(logListLink).toHaveClass(/bg-accent/)
+  // アクティブ時は内側の SidebarMenuButton（button）に bg-accent クラスが付与される
+  await expect(logListLink.locator('button')).toHaveClass(/bg-accent/)
 })

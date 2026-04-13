@@ -59,7 +59,7 @@ describe('LogForm', () => {
     render(<LogForm onSubmit={onSubmit} onCancel={onCancel} />)
 
     await user.selectOptions(screen.getByTestId('log-form-severity'), 'CRITICAL')
-    await user.selectOptions(screen.getByTestId('log-form-source'), 'api-gateway')
+    await user.type(screen.getByTestId('log-form-source'), 'api-gateway')
     await user.type(screen.getByTestId('log-form-message'), 'test message')
 
     await user.click(screen.getByTestId('log-form-submit'))
@@ -103,7 +103,7 @@ describe('LogForm', () => {
     render(<LogForm onSubmit={onSubmit} onCancel={onCancel} />)
 
     await user.selectOptions(screen.getByTestId('log-form-severity'), 'WARNING')
-    await user.selectOptions(screen.getByTestId('log-form-source'), 'api-gateway')
+    await user.type(screen.getByTestId('log-form-source'), 'api-gateway')
     // message は空のまま
 
     await user.click(screen.getByTestId('log-form-submit'))
@@ -123,7 +123,7 @@ describe('LogForm', () => {
 
     render(<LogForm onSubmit={onSubmit} onCancel={onCancel} />)
 
-    await user.selectOptions(screen.getByTestId('log-form-source'), 'api-gateway')
+    await user.type(screen.getByTestId('log-form-source'), 'api-gateway')
     await user.type(screen.getByTestId('log-form-message'), 'test message')
     // severity は選択しない
 
@@ -145,7 +145,7 @@ describe('LogForm', () => {
 
     // timestamp は入力しない
     await user.selectOptions(screen.getByTestId('log-form-severity'), 'ERROR')
-    await user.selectOptions(screen.getByTestId('log-form-source'), 'auth-service')
+    await user.type(screen.getByTestId('log-form-source'), 'auth-service')
     await user.type(screen.getByTestId('log-form-message'), 'test message')
 
     await user.click(screen.getByTestId('log-form-submit'))
