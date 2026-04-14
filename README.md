@@ -37,7 +37,42 @@ docker-compose up --build
 ```
 
 Database migrations run automatically on startup via `alembic upgrade head`.
-On first run, the `seed` service inserts 201 fixed test records automatically (skipped on subsequent runs).
+On first run, the `seed` service inserts 800 fixed test records automatically (skipped on subsequent runs).
+
+### Seed Data Design
+
+The seed data is designed with intentional bias to reflect realistic log distributions:
+
+| Aspect | Design |
+|--------|--------|
+| Total records | 800 |
+| Period | 2026-03-14 – 2026-04-12 (approx. 1 month) |
+| Time concentration | Logs skewed toward business hours (09:00–18:00) |
+| Burst events | ERROR/CRITICAL spikes on 2026-03-22 and 2026-04-05 |
+
+**Severity distribution** (realistic production ratio):
+
+| Severity | Count | Ratio |
+|----------|-------|-------|
+| INFO | ~504 | ~63% |
+| WARNING | ~161 | ~20% |
+| ERROR | ~94 | ~12% |
+| CRITICAL | ~41 | ~5% |
+
+**Source distribution** (traffic-weighted):
+
+| Source | Count | Intent |
+|--------|-------|--------|
+| api-gateway | 240 | All requests pass through — highest volume |
+| auth-service | 180 | Frequent authentication events |
+| user-service | 160 | Moderate volume |
+| payment-service | 120 | Low volume but high criticality |
+| notification-service | 100 | Batch-oriented — lowest volume |
+
+**Severity × Source correlation**:
+- `payment-service` — elevated ERROR/CRITICAL ratio (simulates payment failures)
+- `auth-service` — elevated WARNING ratio (simulates suspicious access attempts)
+- `api-gateway` — predominantly INFO (simulates normal access logs)
 
 | Service | URL |
 |---------|-----|
