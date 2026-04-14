@@ -139,7 +139,7 @@
 
 ## 引き継ぎ事項（Phase 4 Playwright E2E で対応）
 
-- [ ] **W-03 残課題**: PATCH 後に `updated_at` が実際に変化することを Playwright で検証する
+- [x] **W-03 残課題**: PATCH 後に `updated_at` が実際に変化することを Playwright で検証する
   - pytest では同一トランザクション内で `now()` が固定値になるため検証不可
   - Playwright は実サーバーへの本物の HTTP リクエストのため、create → patch 間で時刻が変化することを確認できる
   - Phase 4 の該当スプリントの Sprint Contract に受け入れ基準として含めること

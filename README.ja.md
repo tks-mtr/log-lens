@@ -153,7 +153,7 @@ cd frontend
 # ユニットテスト（Vitest）— 84件
 npm run test
 
-# E2E テスト（Playwright）— 18件
+# E2E テスト（Playwright）— 36件
 # バックエンド + DB の起動が必要
 docker compose up -d app db
 npx playwright test
