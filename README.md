@@ -6,6 +6,17 @@ A web application for centralized management, search, and analysis of applicatio
 
 ---
 
+## Features
+
+- **Dashboard** — Real-time severity summary cards, time-series trend chart (Hour / Day / Week), and severity distribution histogram by source
+- **Log List** — Filterable, sortable, and paginated log table with CSV export
+- **Log Detail** — View, edit, and delete individual log entries
+- **Log Creation** — Create new log entries via a validated form
+- **Source Combobox** — Auto-complete source field populated from existing sources in the DB
+- **Dark / Light Mode** — System-aware theme toggle
+
+---
+
 ## Getting Started
 
 ### Prerequisites
@@ -84,7 +95,7 @@ pytest tests/services/
 
 ```bash
 # Start only the test database
-docker-compose up -d db-test
+docker compose up -d db-test
 
 # Repository integration tests (real PostgreSQL)
 pytest backend/tests/repositories/
@@ -93,7 +104,7 @@ pytest backend/tests/repositories/
 pytest backend/tests/routers/
 ```
 
-**Run all tests with coverage:**
+**Run all tests with coverage (144 tests):**
 
 ```bash
 docker-compose up -d db-test
@@ -106,12 +117,14 @@ pytest --cov=app --cov-report=term-missing
 ```bash
 cd frontend
 
-# Unit tests (Vitest)
+# Unit tests (Vitest) — 84 tests
 npm run test
 
-# E2E tests (Playwright) — requires the dev server running
-npm run dev &
+# E2E tests (Playwright) — 18 tests
+# Requires Docker services running (backend + DB) for API calls
+docker compose up -d app db
 npx playwright test
+# Playwright auto-starts the frontend dev server via webServer config
 ```
 
 ---
@@ -134,6 +147,10 @@ npx playwright test
 
 ## Design Philosophy
 
+### Development Approach
+
+Both backend and frontend were built following Test-Driven Development (TDD). Writing tests first made design intent explicit and allowed features to be built incrementally while preventing regressions.
+
 ### Concept
 
 > **"See the value through your logs — Log Lens"**
@@ -151,6 +168,12 @@ The goal is not just to *display* logs, but to help users *make decisions* from 
 | Operations Engineer | Daily monitoring and early anomaly detection |
 | Backend Developer | Investigating and tracing error causes |
 | Team Lead | Tracking system-wide health trends over time |
+
+Use cases per persona:
+
+- **Operations Engineer**: Start from the dashboard to detect anomalies via severity summary cards, then drill into Log List filtering by CRITICAL / ERROR to inspect details
+- **Backend Developer**: Use the source filter to scope by service name, pinpoint the incident time on the timeseries chart, then review individual logs in Log List
+- **Team Lead**: Review dashboard trends weekly or monthly to track changes in severity distribution and assess overall system health
 
 ### Backend Architecture
 
@@ -219,6 +242,26 @@ GitHub renders Mermaid diagrams natively, so no extension is needed when viewing
 
 ---
 
+## AI-Driven Development
+
+This project was built entirely through AI-driven development using [Claude Code](https://claude.ai/code). The development process itself was treated as an engineering challenge: designing the harness that guides the AI, not just the application.
+
+### Harness Design: Planner / Generator / Evaluator
+
+Inspired by [Anthropic's harness design principles](https://www.anthropic.com/engineering/harness-design-long-running-apps), each sprint was executed by three specialized sub-agents orchestrated via Claude Code's `Agent` tool:
+
+```
+Main Claude (Orchestrator)
+  │
+  ├─ Planner   — Reads requirements + sprint plan → creates Sprint Contract
+  ├─ Generator — Implements features + writes tests based on the contract
+  └─ Evaluator — Reviews tests → runs pytest / Vitest / Playwright → feeds back
+```
+
+The Generator ↔ Evaluator loop repeats per sprint until all acceptance criteria pass. Sprint Contracts (`docs/sprint/`), structured rule files (`.claude/rules/`), custom slash command skills (`/summary`, `/add_memo`), and project-wide instructions (`CLAUDE.md`) were also defined to keep AI behavior consistent across sessions.
+
+---
+
 ## Future Improvements
 
 The following features were out of scope for this submission but are worth pursuing:
@@ -227,3 +270,4 @@ The following features were out of scope for this submission but are worth pursu
 - **Retention Policy**: Automatic deletion of logs older than a configurable period
 - **Real-time Updates**: WebSocket-based push notifications (currently replaced by a manual refresh button)
 - **Authentication & Authorization (frontend)**: Route protection and role-based UI
+- **LLM Debate for Value Judgement**: Multiple LLMs analyze log data from different perspectives and debate to surface anomaly patterns or root cause candidates that a single model might miss

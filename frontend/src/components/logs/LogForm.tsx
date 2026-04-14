@@ -128,18 +128,20 @@ export function LogForm({
         <label htmlFor="log-form-source" className="text-sm font-medium">
           Source <span className="text-red-500">*</span>
         </label>
-        <select
+        <Input
           id="log-form-source"
+          type="text"
+          list="log-form-source-options"
+          placeholder="Enter source..."
           {...register('source')}
           data-testid="log-form-source"
           disabled={isSubmitting}
-          className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50 dark:bg-input/30"
-        >
-          <option value="" disabled>Select source...</option>
+        />
+        <datalist id="log-form-source-options">
           {sources.map((s) => (
-            <option key={s} value={s}>{s}</option>
+            <option key={s} value={s} />
           ))}
-        </select>
+        </datalist>
         {errors.source && (
           <p className="text-sm text-red-500" data-testid="log-form-source-error">
             {errors.source.message}

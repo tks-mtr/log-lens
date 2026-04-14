@@ -1,6 +1,17 @@
 # LogLens
 
-アプリケーションログの記録・検索・分析を一元化する Web アプリケーション。ログデータから意味のある指標を可視化し、システムの状態把握・問題の早期発見・意思決定を支援する。
+アプリケーションログの記録・検索・分析を一元化する Web アプリケーション。ログデータから意味のある指標を可視化し、システムの状態把握・問題の早期発見・意思決定を支援するサービス。
+
+---
+
+## 機能一覧
+
+- **ダッシュボード** — severity 別サマリーカード・時系列トレンドチャート（Hour / Day / Week）・source 別 severity 分布ヒストグラム
+- **ログ一覧** — フィルタ・ソート・ページネーション付きログ表示・CSV エクスポート
+- **ログ詳細** — 個別ログの閲覧・編集・削除
+- **ログ作成** — バリデーション付きフォームからログを新規作成
+- **Source コンボボックス** — DB に存在する source 名を自動補完
+- **ダーク / ライトモード** — システム設定連動のテーマ切替
 
 ---
 
@@ -82,16 +93,16 @@ pytest tests/services/
 
 ```bash
 # テスト用 DB のみ起動
-docker-compose up -d db-test
+docker compose up -d db-test
 
 # Repository 統合テスト（実 PostgreSQL）
 pytest backend/tests/repositories/
 
-# Router 統合テスト（フルスタック）
+# Router 統合テスト
 pytest backend/tests/routers/
 ```
 
-**カバレッジ付き全テスト実行:**
+**カバレッジ付き全テスト実行（144件）:**
 
 ```bash
 docker-compose up -d db-test
@@ -104,12 +115,14 @@ pytest --cov=app --cov-report=term-missing
 ```bash
 cd frontend
 
-# ユニットテスト（Vitest）
+# ユニットテスト（Vitest）— 84件
 npm run test
 
-# E2E テスト（Playwright）— 開発サーバーの起動が必要
-npm run dev &
+# E2E テスト（Playwright）— 18件
+# バックエンド + DB の起動が必要
+docker compose up -d app db
 npx playwright test
+# Playwright は webServer 設定によりフロントエンド開発サーバーを自動起動する
 ```
 
 ---
@@ -132,11 +145,15 @@ npx playwright test
 
 ## 設計思想
 
+### 開発方針
+
+バックエンド・フロントエンドともにテスト駆動開発（TDD）で実装。テストを先に書くことで設計の意図を明文化し、リグレッションを防ぎながら機能を作成。
+
 ### コンセプト
 
-> **「ログから価値を見出す（Log Lens）」**
+> **「ログから価値を見出す」**
 
-ログを「見る」だけでなく、「判断できる」状態にすることを目指した。ダッシュボードは単なるデータ表示ではなく、以下の問いに答えられるよう設計している。
+ログを「見る」だけでなく、「判断できる」状態にすることを目指した。ダッシュボードで以下のようにデータの可視化を行なった。
 
 - **今、システムに異常はないか？** → severity 別サマリーカード
 - **いつ・どこで問題が起きたか？** → 時系列トレンドチャート + source フィルタ
@@ -149,6 +166,12 @@ npx playwright test
 | 運用保守担当 | 日常監視・異常の早期検知 |
 | バックエンド開発者 | エラー原因の調査・特定 |
 | チームリード | システム全体の健全性トレンド把握 |
+
+各ペルソナのユースケース：
+
+- **運用保守担当**: ダッシュボードを起点に severity サマリーで異常を検知し、Log List で CRITICAL / ERROR を絞り込んで詳細を確認する
+- **バックエンド開発者**: source フィルタでサービス名を指定し、時系列チャートで障害発生時刻を特定してから Log List でログを精査する
+- **チームリード**: 週次・月次でダッシュボードのトレンドを確認し、severity 分布の変化からシステム品質の傾向を把握する
 
 ### バックエンドアーキテクチャ
 
@@ -209,18 +232,37 @@ Router → Service → Repository → PostgreSQL
 
 ## 設計ドキュメントの閲覧
 
-`docs/system/` 配下の設計ドキュメント（ER図・画面遷移図・シーケンス図）は [Mermaid](https://mermaid.js.org/) 記法を使用している。VS Code でローカルプレビューするには以下の拡張機能をインストールすること：
+`docs/system/` 配下の設計ドキュメント（ER図・画面遷移図・シーケンス図）は [Mermaid](https://mermaid.js.org/) 記法を使用している。VS Code でローカルプレビューのため、以下の拡張機能をインストールを推奨：
 
 - [Markdown Preview Mermaid Support](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)
 
-GitHub 上では Mermaid がネイティブレンダリングされるため、拡張機能は不要。
+---
+
+## AI 駆動開発
+
+本プロジェクトは [Claude Code](https://claude.ai/code) を用いた AI 駆動開発で構築。AI を適切に導くようハーネス設計を含めて実装した。
+
+### ハーネス設計: Planner / Generator / Evaluator
+
+[Anthropic のハーネス設計](https://www.anthropic.com/engineering/harness-design-long-running-apps) を参考に、各スプリントを Claude Code の `Agent` ツールで起動する3つの専門エージェントで分担した。
+
+```
+Main Claude（オーケストレーター）
+  │
+  ├─ Planner   — 要件 + スプリント計画を読み → Sprint Contract を作成
+  ├─ Generator — Sprint Contract をもとに機能実装 + テスト設計
+  └─ Evaluator — テスト設計レビュー → pytest / Vitest / Playwright 実行 → フィードバック
+```
+
+Generator ↔ Evaluator のループをスプリントごとに繰り返し、全受け入れ基準が通過した時点で完了とする。Sprint Contract（`docs/sprint/`）・構造化ルールファイル（`.claude/rules/`）・カスタムスラッシュコマンド（`/summary`・`/add_memo`）・プロジェクト全体指示（`CLAUDE.md`）も整備し、セッションをまたいでも AI の振る舞いが一貫するよう設計した。
 
 ---
 
-## やりたかったこと
+## やりたかったこと（≒ ボーナスアイデア）
 
 実装スコープ外だが、以下の機能を将来的に実現したい：
 
+- **LLM ディベートによる価値判断**: 複数の LLM がログデータに対して異なる視点で分析・議論し、単一モデルでは見落としがちな異常パターンや根本原因の候補を提示する
 - **認証・権限管理**: JWT による管理者／一般ユーザーのロール分離
 - **リテンションポリシー**: 一定期間経過したログの自動削除
 - **リアルタイム更新**: WebSocket による Push 通知（現状は手動更新ボタンで代替）

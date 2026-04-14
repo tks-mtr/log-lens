@@ -11,7 +11,9 @@ export function CustomTooltip({
 }) {
   if (!active || !payload || payload.length === 0) return null
   const sorted = [...payload].sort(
-    (a, b) => SEVERITY_ORDER.indexOf(a.name ?? '') - SEVERITY_ORDER.indexOf(b.name ?? ''),
+    (a, b) =>
+      (SEVERITY_ORDER as readonly string[]).indexOf(a.name ?? '') -
+      (SEVERITY_ORDER as readonly string[]).indexOf(b.name ?? ''),
   )
   return (
     <div

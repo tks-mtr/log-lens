@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
 
 // --- Mock data ---
 
@@ -21,7 +21,7 @@ const MOCK_LOGS_LIST_RESPONSE = {
 }
 
 /** POST /api/v1/logs のモックをセットアップ */
-async function setupCreateLogMock(page: Parameters<Parameters<typeof test>[1]>[0]) {
+async function setupCreateLogMock(page: Page) {
   await page.route('**/api/v1/logs', (route) => {
     if (route.request().method() === 'POST') {
       route.fulfill({
@@ -31,7 +31,7 @@ async function setupCreateLogMock(page: Parameters<Parameters<typeof test>[1]>[0
       })
     } else if (route.request().method() === 'GET') {
       const url = route.request().url()
-      if (url.includes('/analytics') || url.includes('/export')) {
+      if (url.includes('/analytics') || url.includes('/export') || url.includes('/sources')) {
         route.continue()
         return
       }
@@ -52,7 +52,7 @@ test('E-11: creates_log_and_redirects_to_logs_list_when_form_submitted_with_all_
 
   await page.route('**/api/v1/logs', (route) => {
     const url = route.request().url()
-    if (url.includes('/analytics') || url.includes('/export')) {
+    if (url.includes('/analytics') || url.includes('/export') || url.includes('/sources')) {
       route.continue()
       return
     }
@@ -106,7 +106,7 @@ test('E-13: shows_validation_error_and_does_not_submit_when_source_is_empty', as
 
   await page.route('**/api/v1/logs', (route) => {
     const url = route.request().url()
-    if (url.includes('/analytics') || url.includes('/export')) {
+    if (url.includes('/analytics') || url.includes('/export') || url.includes('/sources')) {
       route.continue()
       return
     }
