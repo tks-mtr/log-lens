@@ -11,7 +11,7 @@
 | 3.6 | バックエンド見直し | `feature/backend-review` | docs/design/backend_review_plan.md | 完了 |
 | 4 | Frontend 実装（TDD） | `feature/frontend` | Next.js + Vitest | 完了 |
 | 4.5 | Sprint Fix | `feature/frontend` | バグ修正・UI改善・シードデータ | 完了 |
-| 5 | 結合・仕上げ | `feature/integration` | Docker 動作確認・README 最終化 | 未着手 |
+| 5 | 結合・仕上げ | `feature/integration` | Docker 動作確認・README 最終化 | 完了 |
 
 各フェーズの作業開始前に、そのフェーズの `_plan.md` を作成して `docs/` 配下に格納すること。計画なしに実装を開始してはならない。`_plan.md` はブランチ作成直後・実装開始前に単独でコミットすること。
 

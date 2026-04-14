@@ -6,7 +6,7 @@
 
 ## 作業ステップ
 
-### Step 1 — プラン作成・コミット [ ]
+### Step 1 — プラン作成・コミット [x]
 - **成果物:** `docs/design/backend_plan.md`
 - **内容:** ブランチ作成後・Step 2 実装前に単独でコミットする
 
@@ -22,7 +22,7 @@
   - `backend/app/core/logging.py`（ロギング設定）
   - `backend/tests/core/test_config.py`
 
-### Step 3 — DB / マイグレーション設定 [ ]
+### Step 3 — DB / マイグレーション設定 [x]
 - **テスト実行環境:** Docker（`db-test` コンテナ使用）
 - **成果物:**
   - `backend/app/core/database.py`（SQLAlchemy v2 AsyncSession 設定）
@@ -30,7 +30,7 @@
   - `backend/alembic/`（初期マイグレーション）
   - `backend/tests/conftest.py`（テスト用DB接続・セッション設定 ※ database.py に依存するため Step 3 で作成）
 
-### Step 4 — スキーマ定義 [ ]
+### Step 4 — スキーマ定義 [x]
 - **テスト実行環境:** venv（DB不要）
 - **成果物:** `backend/app/schemas/log.py`
 - **内容:**
@@ -41,28 +41,28 @@
   - `AnalyticsSummaryResponse`: GET /logs/analytics/summary レスポンス（`summary / histogram`）
   - `TimeseriesResponse`: GET /logs/analytics/timeseries レスポンス（`interval / data`）
 
-### Step 5 — Repository 層（TDD） [ ]
+### Step 5 — Repository 層（TDD） [x]
 - **テスト実行環境:** Docker（`db-test` コンテナ使用・実 PostgreSQL 必須）
 - **成果物:**
   - `backend/app/repositories/log_repository.py`
   - `backend/tests/repositories/test_log_repository.py`
 - **内容:** CRUD・フィルタ検索・集計クエリ・CSVエクスポート
 
-### Step 6 — Service 層（TDD） [ ]
+### Step 6 — Service 層（TDD） [x]
 - **テスト実行環境:** venv（Repository をモックして単体テスト）
 - **成果物:**
   - `backend/app/services/log_service.py`
   - `backend/tests/services/test_log_service.py`
 - **内容:** ビジネスロジック（timestamp デフォルト設定・バリデーション）・Repository 呼び出し
 
-### Step 7 — Router 層（TDD） [ ]
+### Step 7 — Router 層（TDD） [x]
 - **テスト実行環境:** Docker（`db-test` コンテナ使用・実DB でフルスタック統合テスト）
 - **成果物:**
   - `backend/app/routers/logs.py`
   - `backend/tests/routers/test_logs.py`
 - **内容:** 全エンドポイント実装（CRUD + analytics/summary + analytics/timeseries + export/csv）。httpx AsyncClient でテスト
 
-### Step 8 — 動作確認 [ ]
+### Step 8 — 動作確認 [x]
 - **内容:** `docker-compose up` で起動・Swagger UI（`/docs`）で全エンドポイントを手動確認・pytest 全件グリーン確認
 
 ---

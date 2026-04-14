@@ -155,7 +155,7 @@ cd frontend
 # Unit tests (Vitest) — 84 tests
 npm run test
 
-# E2E tests (Playwright) — 18 tests
+# E2E tests (Playwright) — 36 tests
 # Requires Docker services running (backend + DB) for API calls
 docker compose up -d app db
 npx playwright test

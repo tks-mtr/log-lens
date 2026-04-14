@@ -168,5 +168,5 @@
 
 - [x] Sprint 1〜5 の全ステップ完了
 - [x] Vitest 全件グリーン（84件）
-- [x] Playwright 全件グリーン（10件）
-- [ ] PR直前コミット（CLAUDE.md / README.md / README.ja.md / docs/summary.md / 本ファイル）完了
+- [x] Playwright 全件グリーン（36件）
+- [x] PR直前コミット（CLAUDE.md / README.md / README.ja.md / docs/summary.md / 本ファイル）完了
