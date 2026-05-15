@@ -12,7 +12,7 @@ import { SEVERITIES } from '@/constants/severity'
 
 export default function DashboardPage() {
   const [filters, setFilters] = useState<AnalyticsFilters>({})
-  const [interval, setInterval] = useState<'hour' | 'day' | 'week'>('day')
+  const [interval, setInterval] = useState<'hour' | 'day' | 'week' | 'month'>('day')
 
   const {
     data: summaryData,

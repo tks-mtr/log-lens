@@ -2,6 +2,7 @@
 Router 層の統合テスト（実 PostgreSQL + httpx AsyncClient 使用）。
 Docker 環境（db-test コンテナ）で実行する。
 """
+
 import math
 from datetime import datetime, timedelta, timezone
 
@@ -25,11 +26,14 @@ async def create_log(client: AsyncClient, **kwargs) -> dict:
 
 class TestCreateLog:
     async def test_returns_201_with_log(self, client):
-        resp = await client.post(BASE, json={
-            "severity": "ERROR",
-            "source": "api-server",
-            "message": "Connection timeout",
-        })
+        resp = await client.post(
+            BASE,
+            json={
+                "severity": "ERROR",
+                "source": "api-server",
+                "message": "Connection timeout",
+            },
+        )
         assert resp.status_code == 201
         data = resp.json()
         assert data["severity"] == "ERROR"
@@ -41,9 +45,14 @@ class TestCreateLog:
 
     async def test_timestamp_defaults_to_now_when_omitted(self, client):
         before = datetime.now(timezone.utc)
-        resp = await client.post(BASE, json={
-            "severity": "INFO", "source": "app", "message": "started",
-        })
+        resp = await client.post(
+            BASE,
+            json={
+                "severity": "INFO",
+                "source": "app",
+                "message": "started",
+            },
+        )
         after = datetime.now(timezone.utc)
         assert resp.status_code == 201
         ts_str = resp.json()["timestamp"]
@@ -52,15 +61,25 @@ class TestCreateLog:
         assert before - timedelta(seconds=5) <= ts <= after + timedelta(seconds=5)
 
     async def test_returns_422_on_invalid_severity(self, client):
-        resp = await client.post(BASE, json={
-            "severity": "DEBUG", "source": "app", "message": "msg",
-        })
+        resp = await client.post(
+            BASE,
+            json={
+                "severity": "DEBUG",
+                "source": "app",
+                "message": "msg",
+            },
+        )
         assert resp.status_code == 422
 
     async def test_returns_422_on_empty_source(self, client):
-        resp = await client.post(BASE, json={
-            "severity": "INFO", "source": "", "message": "msg",
-        })
+        resp = await client.post(
+            BASE,
+            json={
+                "severity": "INFO",
+                "source": "",
+                "message": "msg",
+            },
+        )
         assert resp.status_code == 422
 
     async def test_returns_422_on_missing_required_field(self, client):
@@ -169,9 +188,7 @@ class TestListLogs:
 class TestUpdateLog:
     async def test_returns_200_with_updated_fields(self, client):
         created = await create_log(client, severity="INFO")
-        resp = await client.patch(
-            f"{BASE}/{created['id']}", json={"severity": "ERROR"}
-        )
+        resp = await client.patch(f"{BASE}/{created['id']}", json={"severity": "ERROR"})
         assert resp.status_code == 200
         updated = resp.json()
         assert updated["severity"] == "ERROR"
@@ -311,11 +328,17 @@ class TestAnalyticsTimeseries:
         assert isinstance(entry["ERROR"], int)
         assert isinstance(entry["CRITICAL"], int)
 
-    async def test_interval_param(self, client):
+    async def test_interval_param_hour(self, client):
         await create_log(client)
         resp = await client.get(f"{BASE}/analytics/timeseries?interval=hour")
         assert resp.status_code == 200
         assert resp.json()["interval"] == "hour"
+
+    async def test_interval_param_month(self, client):
+        await create_log(client)
+        resp = await client.get(f"{BASE}/analytics/timeseries?interval=month")
+        assert resp.status_code == 200, resp.json()
+        assert resp.json()["interval"] == "month"
 
     async def test_returns_400_when_start_after_end(self, client):
         resp = await client.get(

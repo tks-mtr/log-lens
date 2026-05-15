@@ -58,7 +58,9 @@ class LogRepository:
         limit: int = 50,
     ) -> tuple[list[Log], int]:
         stmt = select(Log)
-        stmt = _apply_filters(stmt, start=start, end=end, severities=severities, source=source)
+        stmt = _apply_filters(
+            stmt, start=start, end=end, severities=severities, source=source
+        )
 
         count_stmt = select(func.count()).select_from(stmt.subquery())
         total: int = (await session.execute(count_stmt)).scalar_one()
@@ -104,7 +106,12 @@ class LogRepository:
         # source フィルタは分析系のため完全一致
         def filtered(stmt):
             return _apply_filters(
-                stmt, start=start, end=end, severities=severities, source=source, source_exact=True
+                stmt,
+                start=start,
+                end=end,
+                severities=severities,
+                source=source,
+                source_exact=True,
             )
 
         # severity 全体集計
@@ -159,9 +166,11 @@ class LogRepository:
         end: datetime | None = None,
         severities: list[str] | None = None,
         source: str | None = None,
-        interval: Literal["hour", "day", "week"] = "day",
+        interval: Literal["hour", "day", "week", "month"] = "day",
     ) -> list[dict[str, Any]]:
-        pg_interval = {"hour": "hour", "day": "day", "week": "week"}[interval]
+        pg_interval = {"hour": "hour", "day": "day", "week": "week", "month": "month"}[
+            interval
+        ]
         trunc = func.date_trunc(pg_interval, Log.timestamp)
         stmt = _apply_filters(
             select(
@@ -202,7 +211,9 @@ class LogRepository:
         source: str | None = None,
     ) -> list[Log]:
         stmt = select(Log)
-        stmt = _apply_filters(stmt, start=start, end=end, severities=severities, source=source)
+        stmt = _apply_filters(
+            stmt, start=start, end=end, severities=severities, source=source
+        )
         stmt = stmt.order_by(Log.timestamp.asc())
         result = await session.execute(stmt)
         return list(result.scalars().all())

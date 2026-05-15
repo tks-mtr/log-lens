@@ -140,6 +140,21 @@ describe('useAnalyticsTimeseries', () => {
     expect(JSON.stringify(keyDay)).not.toBe(JSON.stringify(keyHour))
   })
 
+  // 追加: interval='month' で正常に動作する
+  it('returns_timeseries_data_when_interval_is_month', async () => {
+    const monthResponse = { ...TIMESERIES_RESPONSE, interval: 'month' as const }
+    vi.mocked(api.getAnalyticsTimeseries).mockResolvedValue(monthResponse)
+
+    const { result } = renderHook(
+      () => useAnalyticsTimeseries({ interval: 'month' }),
+      { wrapper: createWrapper() }
+    )
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+
+    expect(result.current.data?.interval).toBe('month')
+  })
+
   // 追加: 異常系 — API が失敗したとき isError=true
   it('sets_isError_true_when_timeseries_api_fails', async () => {
     vi.mocked(api.getAnalyticsTimeseries).mockRejectedValue(new Error('HTTP error 500'))

@@ -37,7 +37,7 @@ export function useAnalyticsSummary(filters: AnalyticsFilters = {}) {
  * queryKey にフィルタ・interval 状態を含めることで、変更時に自動再フェッチされる。
  */
 export function useAnalyticsTimeseries(
-  filters: AnalyticsFilters & { interval: 'hour' | 'day' | 'week' } = { interval: 'day' }
+  filters: AnalyticsFilters & { interval: 'hour' | 'day' | 'week' | 'month' } = { interval: 'day' }
 ) {
   const { interval, ...rest } = filters
   return useQuery<AnalyticsTimeseriesResponse, Error>({

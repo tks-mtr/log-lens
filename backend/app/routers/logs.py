@@ -29,6 +29,7 @@ router = APIRouter(prefix="/api/v1/logs", tags=["logs"])
 
 # ─── 分析・CSV（/{log_id} より前に定義してルート衝突を防ぐ）────────────────────
 
+
 @router.get("/analytics/summary", response_model=AnalyticsSummaryResponse)
 async def get_analytics_summary(
     start: datetime | None = Query(default=None),
@@ -52,7 +53,7 @@ async def get_analytics_timeseries(
     end: datetime | None = Query(default=None),
     severity: list[str] | None = Query(default=None),
     source: str | None = Query(default=None),
-    interval: Literal["hour", "day", "week"] = Query(default="day"),
+    interval: Literal["hour", "day", "week", "month"] = Query(default="day"),
     session: AsyncSession = Depends(get_session),
 ) -> TimeseriesResponse:
     data = await LogService.get_timeseries(
@@ -106,6 +107,7 @@ async def get_sources(
 
 
 # ─── CRUD ──────────────────────────────────────────────────────────────────────
+
 
 @router.get("", response_model=LogListResponse)
 async def list_logs(

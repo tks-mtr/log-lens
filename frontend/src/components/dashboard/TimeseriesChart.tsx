@@ -18,14 +18,15 @@ const renderTwoRowLegend = createTwoRowLegend('h-0.5')
 
 interface TimeseriesChartProps {
   data: TimeseriesEntry[]
-  interval: 'hour' | 'day' | 'week'
-  onIntervalChange: (interval: 'hour' | 'day' | 'week') => void
+  interval: 'hour' | 'day' | 'week' | 'month'
+  onIntervalChange: (interval: 'hour' | 'day' | 'week' | 'month') => void
 }
 
-const INTERVALS: { value: 'hour' | 'day' | 'week'; label: string }[] = [
+const INTERVALS: { value: 'hour' | 'day' | 'week' | 'month'; label: string }[] = [
   { value: 'hour', label: 'Hour' },
   { value: 'day', label: 'Day' },
   { value: 'week', label: 'Week' },
+  { value: 'month', label: 'Month' },
 ]
 
 

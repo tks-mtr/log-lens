@@ -42,7 +42,9 @@ app.include_router(logs_router)
 
 
 @app.exception_handler(Exception)
-async def unhandled_exception_handler(request: Request, _exc: Exception) -> JSONResponse:
+async def unhandled_exception_handler(
+    request: Request, _exc: Exception
+) -> JSONResponse:
     logger.exception("Unhandled exception: %s %s", request.method, request.url.path)
     return JSONResponse(
         status_code=500,
