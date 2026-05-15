@@ -69,5 +69,5 @@ class AnalyticsSummaryResponse(BaseModel):
 
 
 class TimeseriesResponse(BaseModel):
-    interval: Literal["hour", "day", "week"]
+    interval: Literal["hour", "day", "week", "month"]
     data: list[TimeseriesEntry]

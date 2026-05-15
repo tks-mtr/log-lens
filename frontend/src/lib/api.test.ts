@@ -270,6 +270,21 @@ describe('getAnalyticsTimeseries', () => {
     expect(result.data[0].INFO).toBe(50)
     expect(result.data[0].WARNING).toBe(10)
   })
+
+  it('test_getAnalyticsTimeseries_month_クエリパラメータにinterval=monthが含まれる', async () => {
+    let calledUrl = ''
+    global.fetch = vi.fn().mockImplementation((url: string) => {
+      calledUrl = url
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ ...mockTimeseriesResponse, interval: 'month' }),
+      })
+    }) as unknown as typeof fetch
+
+    await getAnalyticsTimeseries({ interval: 'month' })
+
+    expect(calledUrl).toContain('interval=month')
+  })
 })
 
 // ============================================================

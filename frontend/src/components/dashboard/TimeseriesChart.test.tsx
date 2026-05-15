@@ -79,6 +79,31 @@ describe('TimeseriesChart', () => {
     expect(hourTab).toHaveAttribute('aria-selected', 'false')
   })
 
+  it('calls_onIntervalChange_when_month_tab_clicked', () => {
+    const onIntervalChange = vi.fn()
+    render(
+      <TimeseriesChart
+        data={SAMPLE_DATA}
+        interval="day"
+        onIntervalChange={onIntervalChange}
+      />
+    )
+    fireEvent.click(screen.getByRole('tab', { name: 'Month' }))
+    expect(onIntervalChange).toHaveBeenCalledWith('month')
+  })
+
+  it('renders_month_tab_with_correct_active_state_when_interval_is_month', () => {
+    render(
+      <TimeseriesChart
+        data={SAMPLE_DATA}
+        interval="month"
+        onIntervalChange={vi.fn()}
+      />
+    )
+    expect(screen.getByRole('tab', { name: 'Month' })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByRole('tab', { name: 'Day' })).toHaveAttribute('aria-selected', 'false')
+  })
+
   // V-05: 境界値 — data=[] のとき "No data" が表示されクラッシュしない
   it('shows_no_data_message_when_data_is_empty', () => {
     render(

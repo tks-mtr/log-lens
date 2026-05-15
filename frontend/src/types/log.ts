@@ -71,7 +71,7 @@ export interface HistogramEntry {
 
 // GET /logs/analytics/timeseries レスポンス
 export interface AnalyticsTimeseriesResponse {
-  interval: 'hour' | 'day' | 'week'
+  interval: 'hour' | 'day' | 'week' | 'month'
   data: TimeseriesEntry[]
 }
 
@@ -89,7 +89,7 @@ export interface AnalyticsParams {
   end?: string
   severity?: Severity | Severity[]
   source?: string
-  interval?: 'hour' | 'day' | 'week'
+  interval?: 'hour' | 'day' | 'week' | 'month'
 }
 
 // CreateLogInput / UpdateLogInput (alias for clarity)

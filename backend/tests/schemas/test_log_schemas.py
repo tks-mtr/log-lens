@@ -188,8 +188,12 @@ class TestAnalyticsSummaryResponse:
         response = AnalyticsSummaryResponse(
             summary=SeveritySummary(INFO=120, WARNING=45, ERROR=30, CRITICAL=5),
             histogram=[
-                HistogramEntry(source="api-server", INFO=80, WARNING=20, ERROR=15, CRITICAL=2),
-                HistogramEntry(source="worker", INFO=40, WARNING=25, ERROR=15, CRITICAL=3),
+                HistogramEntry(
+                    source="api-server", INFO=80, WARNING=20, ERROR=15, CRITICAL=2
+                ),
+                HistogramEntry(
+                    source="worker", INFO=40, WARNING=25, ERROR=15, CRITICAL=3
+                ),
             ],
         )
         assert response.summary.INFO == 120
@@ -227,8 +231,12 @@ class TestTimeseriesResponse:
         response = TimeseriesResponse(
             interval="day",
             data=[
-                TimeseriesEntry(timestamp=ts1, INFO=50, WARNING=10, ERROR=5, CRITICAL=1),
-                TimeseriesEntry(timestamp=ts2, INFO=60, WARNING=15, ERROR=8, CRITICAL=0),
+                TimeseriesEntry(
+                    timestamp=ts1, INFO=50, WARNING=10, ERROR=5, CRITICAL=1
+                ),
+                TimeseriesEntry(
+                    timestamp=ts2, INFO=60, WARNING=15, ERROR=8, CRITICAL=0
+                ),
             ],
         )
         assert response.interval == "day"
@@ -250,7 +258,7 @@ class TestTimeseriesResponse:
 
     def test_invalid_interval_raises(self):
         with pytest.raises(ValidationError):
-            TimeseriesResponse(interval="month", data=[])
+            TimeseriesResponse(interval="year", data=[])
 
     def test_default_zero_counts(self):
         entry = TimeseriesEntry(timestamp=datetime(2026, 4, 1, tzinfo=timezone.utc))
